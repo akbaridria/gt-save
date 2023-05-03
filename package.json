@@ -1,0 +1,37 @@
+{
+  "name": "gt-save",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate",
+    "contract:compile": "npx hardhat compile",
+    "contract-main:deploy": "npx hardhat run --network polygon-testnet scripts/deploy.js",
+    "contract-connector:deploy": "npx hardhat run --network $NETWORK scripts/deployConnector.js"
+  },
+  "dependencies": {
+    "@aave/core-v3": "^1.17.2",
+    "@axelar-network/axelar-gmp-sdk-solidity": "^3.3.0",
+    "@axelar-network/axelarjs-sdk": "^0.12.6",
+    "@chainlink/contracts": "^0.6.1",
+    "@nomiclabs/hardhat-ethers": "^2.2.3",
+    "@openzeppelin/contracts": "^4.8.2",
+    "core-js": "^3.25.3",
+    "dotenv": "^16.0.3",
+    "fs": "^0.0.1-security",
+    "nuxt": "^2.15.8",
+    "vue": "^2.7.10",
+    "vue-server-renderer": "^2.7.10",
+    "vue-template-compiler": "^2.7.10"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^2.0.2",
+    "@tenderly/hardhat-tenderly": "^1.7.2",
+    "autoprefixer": "^10.4.14",
+    "hardhat": "^2.13.0",
+    "postcss": "^8.4.21",
+    "tailwindcss": "^3.3.1"
+  }
+}

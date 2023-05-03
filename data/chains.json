@@ -1,0 +1,29 @@
+[
+  {
+    "name": "Polygon",
+    "chainId": 80001,
+    "rpc": "https://rpc-mumbai.maticvigil.com",
+    "gateway": "0xBF62ef1486468a6bd26Dd669C06db43dEd5B849B",
+    "gasReceiver": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6",
+    "contractAddress": "0x0D81E5BA7B787e5F005590EC3d3f4D4Ec27cAf8d",
+    "aToken": "0x9daBC9860F8792AeE427808BDeF1f77eFeF0f24E",
+    "usdc": "0xe9DcE89B076BA6107Bb64EF30678efec11939234",
+    "poolUsdc": "0x0b913A76beFF3887d35073b8e5530755D60F78C7",
+    "vrfCoordinator": "0x7a1BaC17Ccc5b313516C5E16fb24f7659aA5ebed",
+    "vrfConsumer": "0x7F9F1290139B5bbD1633E23797862505c5AfFf13",
+    "router": "0xEF7ED56DEc39E1Aa9617789095c4C826E63D6193",
+    "swapHelper": "0x86e5D57F3071aF3c6b01c800a2E110e993B39d07",
+    "wmatic": "0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889",
+    "axlToken": "0x2c852e740B62308c46DD29B982FBb650D063Bd07",
+    "test": "asd"
+  },
+  {
+    "name": "Avalanche",
+    "chainId": 43113,
+    "rpc": "https://api.avax-test.network/ext/bc/C/rpc",
+    "gateway": "0xC249632c2D40b9001FE907806902f63038B737Ab",
+    "gasReceiver": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6",
+    "contractAddress": "0x668c625E4801227239e989b219fe958376531D21",
+    "axlToken": "0x57F1c63497AEe0bE305B8852b354CEc793da43bB"
+  }
+]
