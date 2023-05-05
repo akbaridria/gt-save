@@ -13,7 +13,7 @@ contract VRFV2Consumer is VRFConsumerBaseV2, ConfirmedOwner {
   GTSave public gtSave;
   uint64 sId;
   bytes32 keyHash;
-  uint32 callbackGasLimit = 10000000;
+  uint32 callbackGasLimit = 2000000;
   uint16 requestConfirmations = 3;
   uint32 numWords = 1;
   uint256[] public requestIds;

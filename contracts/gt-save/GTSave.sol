@@ -9,7 +9,6 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import {Arrays} from "@openzeppelin/contracts/utils/Arrays.sol";
 
 import {IAToken} from "@aave/core-v3/contracts/interfaces/IAToken.sol";
 import "@aave/core-v3/contracts/interfaces/IPool.sol";
@@ -39,7 +38,6 @@ contract GTSave is AxelarExecutable, ReentrancyGuard {
   uint256 public roundId = 10000000;
   uint256 public prizes;
   uint256 public totalDeposit;
-  address public owner;
   address public vrfCoordinator;
 
   uint256 startRoundDate = block.timestamp;
@@ -65,6 +63,11 @@ contract GTSave is AxelarExecutable, ReentrancyGuard {
     require(winners[_roundId].winner == winner, "GTSave: not a winner on round spesified");
     _;
   }
+
+  event _deposit(address indexed _from, string _fromChain, uint256 _roundId, uint256 _amount);
+  event _withdraw(address indexed _from, string _fromChain, uint256 _roundId, uint256 _amount );
+  event _claim(address indexed _from, string _fromChain, uint256 _roubndId, uint256 _amount);
+
 
   constructor(
     address _gateway, 
@@ -125,6 +128,7 @@ contract GTSave is AxelarExecutable, ReentrancyGuard {
       prize: prizeAmount
     });
 
+    userData[winner].oddUpdate = block.timestamp;
     userData[winner].listWin.push(Types.DetailWin({
       roundId: roundId,
       prize: prizeAmount,
@@ -155,9 +159,10 @@ contract GTSave is AxelarExecutable, ReentrancyGuard {
     usdc.safeApprove(address(iPool), amount);
     iPool.supply(address(usdc), amount, address(this), 0);
 
+    emit _deposit(msg.sender, 'Polygon', roundId, amount);
   }
 
-  function Withdraw(uint256 amount) external userExist(msg.sender) nonReentrant {
+  function withdraw(uint256 amount) external userExist(msg.sender) nonReentrant {
     require(userData[msg.sender].balance >= amount, "GTSave: insufficient balance");
 
     totalDeposit -= amount;
@@ -169,18 +174,22 @@ contract GTSave is AxelarExecutable, ReentrancyGuard {
     userData[msg.sender].balance -= amount;
 
     if(userData[msg.sender].balance == 0) {
-      delete userData[msg.sender];
-      Utils.deleteArrayByValue(msg.sender, listUserData);
+      listUserData = Utils.deleteArrayByValue(msg.sender, listUserData);
     }
 
     usdc.safeTransfer(msg.sender, balanceToSend);
+
+    emit _withdraw(msg.sender, 'Polygon', roundId, balanceToSend);
   }
 
   function claim(uint256 _roundId) external validWinner(_roundId, msg.sender) nonReentrant {
     uint256 prize = winners[_roundId].prize;
 
     delete winners[_roundId];
+    Utils.changeStatusDetailWin(_roundId, userData[msg.sender].listWin);
     usdc.safeTransfer(msg.sender, prize);
+
+    emit _claim(msg.sender, 'Polygon', _roundId, prize);
   }
 
   function receiveAndDeposit(address user, uint256 amount) internal {
@@ -227,8 +236,7 @@ contract GTSave is AxelarExecutable, ReentrancyGuard {
     userData[paramWithdraw.user].balance -= paramWithdraw.amount;
 
     if(userData[paramWithdraw.user].balance == 0) {
-      delete userData[paramWithdraw.user];
-      Utils.deleteArrayByValue(paramWithdraw.user, listUserData);
+      listUserData = Utils.deleteArrayByValue(paramWithdraw.user, listUserData);
     }
     
     IERC20(paramWithdraw.gasToken).safeApprove(address(swapHelper), paramWithdraw.amountGas);
@@ -268,7 +276,6 @@ contract GTSave is AxelarExecutable, ReentrancyGuard {
     // but because of lack liquidity in testnet we will use axlUSDC reserve on this contract instead
 
     
-
     IERC20(paramClaimPrize.gasToken).safeApprove(address(swapHelper), paramClaimPrize.amountGas);
     IERC20(paramClaimPrize.gasToken).safeTransfer(address(swapHelper), paramClaimPrize.amountGas);
 
@@ -276,7 +283,8 @@ contract GTSave is AxelarExecutable, ReentrancyGuard {
 
     IERC20(paramClaimPrize.gasToken).safeApprove(address(gateway), prize);
     delete winners[paramClaimPrize.roundId];
-    
+    Utils.changeStatusDetailWin(paramClaimPrize.roundId, userData[paramClaimPrize.user].listWin);
+
     bytes memory payload = abi.encode(paramClaimPrize.user);
 
     Types.PayGas memory payGas = Types.PayGas({
@@ -296,8 +304,7 @@ contract GTSave is AxelarExecutable, ReentrancyGuard {
       symbol: paramClaimPrize.tokenSymbol,
       amount: prize
     });
-    
-    IERC20(paramClaimPrize.gasToken).safeApprove(address(gateway), prize);
+  
     callBridge(payGas, axlCallWithToken, amountMatic);
   }
 
@@ -339,6 +346,7 @@ contract GTSave is AxelarExecutable, ReentrancyGuard {
 
     if(args.id == 0) {
       receiveAndDeposit(args.user, args.amount);
+      emit _deposit(args.user, sourceChain, args.roundId, args.amount);
     } else if (args.id == 1){
       Types.ParameterWithdraw memory paramWithdraw = Types.ParameterWithdraw({
         amount: args.amount,
@@ -350,6 +358,7 @@ contract GTSave is AxelarExecutable, ReentrancyGuard {
         tokenSymbol: tokenSymbol
       });
       receiveAndWithdraw(paramWithdraw);
+      emit _withdraw(args.user, sourceChain, roundId, args.amount);
     } else if(args.id == 2) {
       Types.ParameterClaimPrize memory paramClaimPrize = Types.ParameterClaimPrize({
         user: args.user,
@@ -361,6 +370,7 @@ contract GTSave is AxelarExecutable, ReentrancyGuard {
         tokenSymbol: tokenSymbol
       });
       receiveAndClaimPrize(paramClaimPrize);
+      emit _claim(args.user, sourceChain, roundId, args.amount);
     }
     
   }

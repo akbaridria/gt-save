@@ -23,4 +23,15 @@ module.exports = {
     project: "gt-save", // project name
     privateVerification: false, // if true, contracts will be verified privately, if false, contracts will be verified publicly
   },
+  etherscan: {
+    apiKey: {
+      polygonMumbai: process.env.POLYGONSCAN_API_KEY,
+    },
+  },
+  settings: {
+    optimizer: {
+      enabled: true,
+      runs: 200,
+    },
+  },
 };

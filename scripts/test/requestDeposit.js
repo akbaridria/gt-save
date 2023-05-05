@@ -17,7 +17,7 @@ async function main() {
   const avalanche = chains.filter((item) => item.name === "Avalanche");
   const polygon = chains.filter((item) => item.name === "Polygon");
   const provider = new ethers.providers.JsonRpcProvider(avalanche[0].rpc);
-  const signer = new ethers.Wallet(process.env.PRIV_KEY2, provider);
+  const signer = new ethers.Wallet(process.env.PRIV_KEY, provider);
   const amount = ethers.utils.parseUnits("5", "6");
 
   console.log("Starting testing to request deposit..");

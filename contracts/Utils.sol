@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
+import "./Types.sol";
 
 library Utils {
 
@@ -12,6 +13,15 @@ library Utils {
       }
     }
     return array;
+  }
+
+  function changeStatusDetailWin(uint256 roundId, Types.DetailWin[] storage arr ) internal returns (Types.DetailWin[] storage) {
+    for(uint256 i = 0; i < arr.length - 1; i++) {
+      if(arr[i].roundId == roundId) {
+        arr[i].isClaim = true;
+      }
+    }
+    return arr;
   }
 
   function compareStrings(string memory a, string memory b) internal pure returns (bool) {

@@ -1,4 +1,4 @@
-const { ethers } = require("hardhat");
+const { ethers, run } = require("hardhat");
 const fs = require("fs");
 const path = require("path");
 
@@ -29,6 +29,27 @@ async function main() {
   await gtSave.deployed();
   polygon.contractAddress = gtSave.address;
   console.log("Deployed main-contract: ", gtSave.address);
+  console.log();
+  console.log("------------------------------");
+  console.log("verify contract on polygonscan");
+  console.log("-------------------------------");
+
+  await run(`verify:verify`, {
+    address: gtSave.address,
+    constructorArguments: [
+      polygon.gateway,
+      polygon.gasReceiver,
+      polygon.usdc,
+      polygon.aToken,
+      polygon.poolUsdc,
+      polygon.vrfCoordinator,
+      swapHelper.address,
+      polygon.wmatic,
+    ],
+  });
+
+  console.log("Verify Complete!");
+  console.log("");
 
   console.log("------------------------------------------");
   console.log("deploying vrf consumer...");
