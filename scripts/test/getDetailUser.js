@@ -15,6 +15,10 @@ async function getRate() {
     GTSave.abi,
     signer
   );
+  const e = await swapHelper.getUserData(
+    "0x694aCF4DFb7601F92A0D2a41cdEC5bf7726C7294"
+  );
+  console.log(e.listWin);
   // const d = await swapHelper.getUserData(
   //   "0x1cBef56F09317ca4FB110cF3eDdF3Bcc7DeAE6A5"
   // );
@@ -25,11 +29,11 @@ async function getRate() {
   // d.wait();
   // console.log(d);
   // console.log("approved");
-  const r = await swapHelper.Withdraw(10010000000, {
-    gasLimit: 500000,
-  });
-  r.wait();
-  console.log(r);
+  // const r = await swapHelper.Withdraw(10010000000, {
+  //   gasLimit: 500000,
+  // });
+  // r.wait();
+  // console.log(r);
   // const e = await swapHelper.deposit(amount, {
   //   gasLimit: 500000,
   // });

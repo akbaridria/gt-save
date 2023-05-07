@@ -22,6 +22,11 @@ contract GTSaveConnector is AxelarExecutable {
   string public constant supportedAxlToken = 'aUSDC';
   address public axlUsdc;
 
+
+  event _pendingDeposit(address indexed _from,  uint256 _amount);
+  event _pendingWithdraw(address indexed _from,  uint256 _amount);
+  event _pendingClaim(address indexed _from,  uint256 _roundId );
+
   constructor(address _gateway, address _gasReceiver) AxelarExecutable(_gateway){
     gasReceiver = IAxelarGasService(_gasReceiver);
     axlUsdc = gateway.tokenAddresses(supportedAxlToken);
@@ -85,7 +90,7 @@ contract GTSaveConnector is AxelarExecutable {
       amount: amount
     });
     callBridge(payGas, axlCallWithToken);
-
+    emit _pendingDeposit(msg.sender, amount);
   }
 
   function requestWithdraw(uint256 amount, uint256 amountFeeBack, address destAddress) external payable {
@@ -126,6 +131,7 @@ contract GTSaveConnector is AxelarExecutable {
     });
 
     callBridge(payGas, axlCallWithToken);
+    emit _pendingWithdraw(msg.sender, amount);
   }
 
   function requestClaimPrize(uint256 amountFeeBack, uint256 _roundId, address destAddress) external payable {
@@ -164,6 +170,7 @@ contract GTSaveConnector is AxelarExecutable {
     });
 
     callBridge(payGas, axlCallWithToken);
+    emit _pendingClaim(msg.sender, _roundId);
   }
 
   function _executeWithToken(

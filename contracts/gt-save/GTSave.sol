@@ -3,7 +3,6 @@ pragma solidity ^0.8.0;
 
 import {IAxelarGasService} from "@axelar-network/axelar-gmp-sdk-solidity/contracts/interfaces/IAxelarGasService.sol";
 import {AxelarExecutable} from "@axelar-network/axelar-gmp-sdk-solidity/contracts/executable/AxelarExecutable.sol";
-import "@axelar-network/axelar-gmp-sdk-solidity/contracts/utils/AddressString.sol";
 
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
@@ -20,8 +19,6 @@ import "../Utils.sol";
 contract GTSave is AxelarExecutable, ReentrancyGuard {
   using SafeERC20 for IERC20;
   using SafeMath for uint256;
-  using AddressToString for address;
-  using StringToAddress for string;
 
 
   IAxelarGasService gasReceiver;
@@ -38,7 +35,6 @@ contract GTSave is AxelarExecutable, ReentrancyGuard {
   uint256 public roundId = 10000000;
   uint256 public prizes;
   uint256 public totalDeposit;
-  address public vrfCoordinator;
 
   uint256 startRoundDate = block.timestamp;
   uint256 endRoundDate = block.timestamp + MIN_DURATION_PER_ROUND;
@@ -49,18 +45,18 @@ contract GTSave is AxelarExecutable, ReentrancyGuard {
   mapping(uint256 => address) public weightedBalanceUser;
 
   modifier userExist(address user) {
-    require(userData[user].isEntity, "GTSave: data not found");
+    require(userData[user].isEntity, "data not found");
     _;
   }
 
   modifier winnerExist(uint256 _roundId) {
-    require(winners[_roundId].isEntity, "GTSave: data not found");
+    require(winners[_roundId].isEntity, "data not found");
     _;
   }
 
   modifier validWinner(uint256 _roundId, address winner) {
-    require(winners[_roundId].isEntity, "GTSave: data not found");
-    require(winners[_roundId].winner == winner, "GTSave: not a winner on round spesified");
+    require(winners[_roundId].isEntity, "data not found");
+    require(winners[_roundId].winner == winner, "not a winner on round spesified");
     _;
   }
 
@@ -75,13 +71,11 @@ contract GTSave is AxelarExecutable, ReentrancyGuard {
     address _usdc, 
     address _aToken, 
     address _poolUsdc,
-    address _vrfCoordinator,
     address _univRouter,
     address _wmatic
     ) AxelarExecutable(_gateway) {
 
       gasReceiver = IAxelarGasService(_gasReceiver);
-      vrfCoordinator = _vrfCoordinator;
       usdc = IERC20(_usdc);
       aToken = IAToken(_aToken);
       iPool = IPool(_poolUsdc);
@@ -99,12 +93,13 @@ contract GTSave is AxelarExecutable, ReentrancyGuard {
 
   function getPrize() internal {
     uint256 balanceToWithdraw = getClaimablePrize();
+    prizes += balanceToWithdraw;
     iPool.withdraw(address(usdc), balanceToWithdraw, address(this));
   }
 
   function completeRound(uint256[] memory _randomWords) external nonReentrant {
-    require(listUserData.length > 0, "GTSave: no users deposit!");
-    // require(endRoundDate < block.timestamp, "GTSave: round not ended yet!");
+    require(listUserData.length > 0, "no users deposit!");
+    // require(endRoundDate < block.timestamp, "round not ended yet!");
 
     uint256[] memory weightedBalances = new uint256[](listUserData.length);
 
@@ -141,7 +136,7 @@ contract GTSave is AxelarExecutable, ReentrancyGuard {
 
 
   function deposit(uint256 amount) external nonReentrant {
-    require( usdc.balanceOf(msg.sender) >= amount, "GTSave : insufficient balance");
+    require( usdc.balanceOf(msg.sender) >= amount, "insufficient balance");
 
     totalDeposit += amount;
     
@@ -163,7 +158,7 @@ contract GTSave is AxelarExecutable, ReentrancyGuard {
   }
 
   function withdraw(uint256 amount) external userExist(msg.sender) nonReentrant {
-    require(userData[msg.sender].balance >= amount, "GTSave: insufficient balance");
+    require(userData[msg.sender].balance >= amount, "insufficient balance");
 
     totalDeposit -= amount;
 
@@ -174,7 +169,7 @@ contract GTSave is AxelarExecutable, ReentrancyGuard {
     userData[msg.sender].balance -= amount;
 
     if(userData[msg.sender].balance == 0) {
-      listUserData = Utils.deleteArrayByValue(msg.sender, listUserData);
+      Utils.deleteArrayByValue(msg.sender, listUserData);
     }
 
     usdc.safeTransfer(msg.sender, balanceToSend);
@@ -186,18 +181,16 @@ contract GTSave is AxelarExecutable, ReentrancyGuard {
     uint256 prize = winners[_roundId].prize;
 
     delete winners[_roundId];
-    Utils.changeStatusDetailWin(_roundId, userData[msg.sender].listWin);
+    userData[msg.sender].listWin = Utils.changeStatusDetailWin(_roundId, getUserData(msg.sender).listWin);
     usdc.safeTransfer(msg.sender, prize);
 
     emit _claim(msg.sender, 'Polygon', _roundId, prize);
   }
 
   function receiveAndDeposit(address user, uint256 amount) internal {
-    require(usdc.balanceOf(address(this)) >= amount, "GTSave: insufficient balance on contract");
+    require(usdc.balanceOf(address(this)) >= amount, "insufficient balance on contract");
     
     // it should be swap here from axlUSDC to USDC 
-    // but since testnet is lack of liquidity in testnet we will use usdc reserve on this contract instead
-    // that every 1 axlUSDC receive we will use 1 usdc from this contract to aave pool
 
     totalDeposit += amount;
 
@@ -222,7 +215,7 @@ contract GTSave is AxelarExecutable, ReentrancyGuard {
   
   function receiveAndWithdraw(Types.ParameterWithdraw memory paramWithdraw) internal userExist(paramWithdraw.user) {
 
-    require(userData[paramWithdraw.user].balance >= paramWithdraw.amount, "GTSave: insufficient balance ");
+    require(userData[paramWithdraw.user].balance >= paramWithdraw.amount, "insufficient balance ");
 
     totalDeposit -= paramWithdraw.amount;
 
@@ -231,12 +224,11 @@ contract GTSave is AxelarExecutable, ReentrancyGuard {
     uint256 balanceToSend = paramWithdraw.amount.sub(paramWithdraw.amount.mul(getFee(paramWithdraw.user)));
 
     // it should be swap here from usdc to axlUSDC
-    // but, because of lack liquidity in testnet we will use axlUSDC reserve in this contract instead
     
     userData[paramWithdraw.user].balance -= paramWithdraw.amount;
 
     if(userData[paramWithdraw.user].balance == 0) {
-      listUserData = Utils.deleteArrayByValue(paramWithdraw.user, listUserData);
+      Utils.deleteArrayByValue(paramWithdraw.user, listUserData);
     }
     
     IERC20(paramWithdraw.gasToken).safeApprove(address(swapHelper), paramWithdraw.amountGas);
@@ -273,8 +265,6 @@ contract GTSave is AxelarExecutable, ReentrancyGuard {
     uint256 prize = winners[paramClaimPrize.roundId].prize;
 
     // it should be swap here from usdc to axlusdc
-    // but because of lack liquidity in testnet we will use axlUSDC reserve on this contract instead
-
     
     IERC20(paramClaimPrize.gasToken).safeApprove(address(swapHelper), paramClaimPrize.amountGas);
     IERC20(paramClaimPrize.gasToken).safeTransfer(address(swapHelper), paramClaimPrize.amountGas);
@@ -283,7 +273,7 @@ contract GTSave is AxelarExecutable, ReentrancyGuard {
 
     IERC20(paramClaimPrize.gasToken).safeApprove(address(gateway), prize);
     delete winners[paramClaimPrize.roundId];
-    Utils.changeStatusDetailWin(paramClaimPrize.roundId, userData[paramClaimPrize.user].listWin);
+    userData[paramClaimPrize.user].listWin = Utils.changeStatusDetailWin(paramClaimPrize.roundId, getUserData(paramClaimPrize.user).listWin);
 
     bytes memory payload = abi.encode(paramClaimPrize.user);
 
@@ -338,8 +328,7 @@ contract GTSave is AxelarExecutable, ReentrancyGuard {
     string calldata tokenSymbol,
     uint256
   ) internal override {
-    // require(Utils.compareStrings(tokenSymbol, axlUSDC), "GTSave: Unsupported Token!");
-    
+
     Types.PayloadArgs memory args = abi.decode(payload, (Types.PayloadArgs));
     
     address gasToken = gateway.tokenAddresses(tokenSymbol);
@@ -374,18 +363,12 @@ contract GTSave is AxelarExecutable, ReentrancyGuard {
     }
     
   }
-
-  // if we use standart method to get interest amount like aToken balance - deposit balance
-  // sometime the value is not that "Accurate" that impact the deposit balance will be higher or lower than it should be after withdraw
+  
   function getClaimablePrize() public view returns (uint256) {
     DataTypes.ReserveData memory reserve = iPool.getReserveData(address(usdc));
     uint256 scaledBalance = aToken.scaledBalanceOf(address(this));
     uint256 prize = (scaledBalance.mul(reserve.liquidityIndex).div(1e27)).sub(totalDeposit);
     return prize;
-  }
-
-  function getWiner(uint256 _roundId) public winnerExist(_roundId) view returns (Types.DataWinners memory) {
-    return winners[_roundId];
   }
 
   function getUserData(address user) public userExist(user) view returns (Types.UserData memory){

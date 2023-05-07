@@ -22,7 +22,6 @@ async function main() {
     polygon.usdc,
     polygon.aToken,
     polygon.poolUsdc,
-    polygon.vrfCoordinator,
     swapHelper.address,
     polygon.wmatic
   );
@@ -42,7 +41,6 @@ async function main() {
       polygon.usdc,
       polygon.aToken,
       polygon.poolUsdc,
-      polygon.vrfCoordinator,
       swapHelper.address,
       polygon.wmatic,
     ],

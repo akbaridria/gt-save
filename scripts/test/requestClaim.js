@@ -19,8 +19,8 @@ async function main() {
   const polygon = chains.filter((item) => item.name === "Polygon");
   const provider = new ethers.providers.JsonRpcProvider(avalanche[0].rpc);
   const providerPol = new ethers.providers.JsonRpcProvider(polygon[0].rpc);
-  const signerPol = new ethers.Wallet(process.env.PRIV_KEY2, providerPol);
-  const signer = new ethers.Wallet(process.env.PRIV_KEY2, provider);
+  const signerPol = new ethers.Wallet(process.env.PRIV_KEY, providerPol);
+  const signer = new ethers.Wallet(process.env.PRIV_KEY, provider);
   const amount = ethers.utils.parseUnits("5", "6");
 
   console.log("Start testing to request withdraw..");
@@ -43,7 +43,7 @@ async function main() {
   console.log("get estimated fee on dest chain..");
   console.log("---------------------------------");
   console.log();
-  const api = new AxelarQueryAPI({ environment: Environment.MAINNET });
+  const api = new AxelarQueryAPI({ environment: Environment.TESTNET });
   const gasFee = await api.estimateGasFee(
     EvmChain.AVALANCHE,
     EvmChain.POLYGON,

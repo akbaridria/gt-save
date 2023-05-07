@@ -6,17 +6,18 @@ import "./Types.sol";
 
 library Utils {
 
-  function deleteArrayByValue(address value, address[] memory array) internal pure returns (address[] memory) {
-    for(uint256 i = 0; i < array.length - 1; i++) {
+  function deleteArrayByValue(address value, address[] storage array) internal  {
+    for(uint256 i = 0; i < array.length; i++) {
       if(array[i] == value) {
-        delete array[i];
+        array[i] = array[array.length - 1];
+        array.pop();
+        break;
       }
     }
-    return array;
   }
 
-  function changeStatusDetailWin(uint256 roundId, Types.DetailWin[] storage arr ) internal returns (Types.DetailWin[] storage) {
-    for(uint256 i = 0; i < arr.length - 1; i++) {
+  function changeStatusDetailWin(uint256 roundId, Types.DetailWin[] memory arr ) internal pure returns (Types.DetailWin[] memory) {
+    for(uint256 i = 0; i < arr.length; i++) {
       if(arr[i].roundId == roundId) {
         arr[i].isClaim = true;
       }
@@ -34,8 +35,8 @@ library Utils {
     if(i==j) return arr;
     uint pivot = arr[uint(left + (right - left) / 2)];
     while (i <= j) {
-        while (arr[uint(i)] < pivot) i++;
-        while (pivot < arr[uint(j)]) j--;
+        while (arr[uint(i)] > pivot) i++;
+        while (pivot > arr[uint(j)]) j--;
         if (i <= j) {
             (arr[uint(i)], arr[uint(j)]) = (arr[uint(j)], arr[uint(i)]);
             i++;
