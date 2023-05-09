@@ -16,15 +16,6 @@ library Utils {
     }
   }
 
-  function changeStatusDetailWin(uint256 roundId, Types.DetailWin[] memory arr ) internal pure returns (Types.DetailWin[] memory) {
-    for(uint256 i = 0; i < arr.length; i++) {
-      if(arr[i].roundId == roundId) {
-        arr[i].isClaim = true;
-      }
-    }
-    return arr;
-  }
-
   function compareStrings(string memory a, string memory b) internal pure returns (bool) {
     return keccak256(abi.encodePacked(a)) == keccak256(abi.encodePacked(b));
   }
@@ -51,22 +42,17 @@ library Utils {
     return arr;
   }
 
-  function binarySearch(uint256[] memory _arr, uint256 _low, uint256 _high, uint256 _search) internal pure returns (uint256) {
-    if(_arr[0] > _search) {
+  function pickWinnerIndex(uint256[] memory _arr, uint256 _winningNumber) internal pure returns (uint256) {
+    if(_arr.length == 1) {
       return 0;
-    } else if(_arr[_arr.length - 1] < _search) {
-      return _arr.length - 1;
-    } else {
-      uint256 mid;
-      while(_low <= _high) {
-        mid = (_low + _high) / 2;
-        if(_arr[mid] <_search) {
-          _high = mid - 1;
-        } else {
-          _low = mid + 1;
-        }
-      }
-      return mid;
     }
+    uint256 total = 0;
+    for(uint256 i = 0; i < _arr.length; i++) {
+      if((_arr[i] + total) >= _winningNumber ) {
+        return i;
+      }
+      total += _arr[i];
+    }
+    return _arr.length - 1;
   }
 }

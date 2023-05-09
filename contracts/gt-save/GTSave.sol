@@ -8,6 +8,7 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
 import {IAToken} from "@aave/core-v3/contracts/interfaces/IAToken.sol";
 import "@aave/core-v3/contracts/interfaces/IPool.sol";
@@ -16,7 +17,7 @@ import "../Types.sol";
 import "../SwapHelper.sol";
 import "../Utils.sol";
 
-contract GTSave is AxelarExecutable, ReentrancyGuard {
+contract GTSave is AxelarExecutable, ReentrancyGuard, Ownable {
   using SafeERC20 for IERC20;
   using SafeMath for uint256;
 
@@ -42,7 +43,8 @@ contract GTSave is AxelarExecutable, ReentrancyGuard {
   address[] public listUserData;
   mapping(address => Types.UserData) public userData;
   mapping(uint256 => Types.DataWinners) public winners;
-  mapping(uint256 => address) public weightedBalanceUser;
+  mapping(uint256 => address) private weightedBalanceUser;
+  address vrfConsumer = address(0);
 
   modifier userExist(address user) {
     require(userData[user].isEntity, "data not found");
@@ -63,7 +65,7 @@ contract GTSave is AxelarExecutable, ReentrancyGuard {
   event _deposit(address indexed _from, string _fromChain, uint256 _roundId, uint256 _amount);
   event _withdraw(address indexed _from, string _fromChain, uint256 _roundId, uint256 _amount );
   event _claim(address indexed _from, string _fromChain, uint256 _roubndId, uint256 _amount);
-
+  event _winner(address indexed _from, uint256 indexed _roundId, uint256 prize);
 
   constructor(
     address _gateway, 
@@ -97,23 +99,26 @@ contract GTSave is AxelarExecutable, ReentrancyGuard {
     iPool.withdraw(address(usdc), balanceToWithdraw, address(this));
   }
 
-  function completeRound(uint256[] memory _randomWords) external nonReentrant {
+  function completeRound(uint256[] memory _randomWords) external {
     require(listUserData.length > 0, "no users deposit!");
+    require(msg.sender == vrfConsumer, "Unauthorized");
     // require(endRoundDate < block.timestamp, "round not ended yet!");
 
     uint256[] memory weightedBalances = new uint256[](listUserData.length);
+    uint256 totalWeightedBalance = 0;
 
     for (uint256 i = 0; i < listUserData.length; i++) {
       uint256 weightedBalance = userData[listUserData[i]].balance.add(block.timestamp - userData[listUserData[i]].oddUpdate);
       weightedBalances[i] = weightedBalance;
       weightedBalanceUser[weightedBalance] = listUserData[i];
+      totalWeightedBalance += weightedBalance;
     }
 
     weightedBalances = Utils.quickSort(weightedBalances, int(0), int(weightedBalances.length - 1));
 
-    uint256 winningNumber = _randomWords[0].mod(weightedBalances[0]);
+    uint256 winningNumber = _randomWords[0].mod(totalWeightedBalance);
 
-    uint256 indArr = Utils.binarySearch(weightedBalances, 0, weightedBalances.length - 1, winningNumber);
+    uint256 indArr = Utils.pickWinnerIndex(weightedBalances, winningNumber);
     address winner = weightedBalanceUser[weightedBalances[indArr]];
     uint256 prizeAmount = getClaimablePrize();
 
@@ -126,9 +131,10 @@ contract GTSave is AxelarExecutable, ReentrancyGuard {
     userData[winner].oddUpdate = block.timestamp;
     userData[winner].listWin.push(Types.DetailWin({
       roundId: roundId,
-      prize: prizeAmount,
-      isClaim: false
+      prize: prizeAmount
     }));
+
+    emit _winner(winner, roundId, prizeAmount);
 
     getPrize();
     startRound();
@@ -151,7 +157,7 @@ contract GTSave is AxelarExecutable, ReentrancyGuard {
     }
 
     usdc.safeTransferFrom(msg.sender, address(this), amount);
-    usdc.safeApprove(address(iPool), amount);
+    usdc.approve(address(iPool), amount);
     iPool.supply(address(usdc), amount, address(this), 0);
 
     emit _deposit(msg.sender, 'Polygon', roundId, amount);
@@ -181,7 +187,6 @@ contract GTSave is AxelarExecutable, ReentrancyGuard {
     uint256 prize = winners[_roundId].prize;
 
     delete winners[_roundId];
-    userData[msg.sender].listWin = Utils.changeStatusDetailWin(_roundId, getUserData(msg.sender).listWin);
     usdc.safeTransfer(msg.sender, prize);
 
     emit _claim(msg.sender, 'Polygon', _roundId, prize);
@@ -204,7 +209,7 @@ contract GTSave is AxelarExecutable, ReentrancyGuard {
       listUserData.push(user);
     }
 
-    usdc.safeApprove(address(iPool), amount);
+    usdc.approve(address(iPool), amount);
     iPool.supply(address(usdc), amount, address(this), 0);
     
   }
@@ -231,7 +236,7 @@ contract GTSave is AxelarExecutable, ReentrancyGuard {
       Utils.deleteArrayByValue(paramWithdraw.user, listUserData);
     }
     
-    IERC20(paramWithdraw.gasToken).safeApprove(address(swapHelper), paramWithdraw.amountGas);
+    IERC20(paramWithdraw.gasToken).approve(address(swapHelper), paramWithdraw.amountGas);
     IERC20(paramWithdraw.gasToken).safeTransfer(address(swapHelper), paramWithdraw.amountGas);
 
     uint256 amountMatic = executeSwapForMatic(paramWithdraw.amountGas);
@@ -256,7 +261,7 @@ contract GTSave is AxelarExecutable, ReentrancyGuard {
       amount: balanceToSend
     });
  
-    IERC20(paramWithdraw.gasToken).safeApprove(address(gateway), balanceToSend);
+    IERC20(paramWithdraw.gasToken).approve(address(gateway), balanceToSend);
     callBridge(payGas, axlCallWithToken, amountMatic);
   }
 
@@ -266,14 +271,13 @@ contract GTSave is AxelarExecutable, ReentrancyGuard {
 
     // it should be swap here from usdc to axlusdc
     
-    IERC20(paramClaimPrize.gasToken).safeApprove(address(swapHelper), paramClaimPrize.amountGas);
+    IERC20(paramClaimPrize.gasToken).approve(address(swapHelper), paramClaimPrize.amountGas);
     IERC20(paramClaimPrize.gasToken).safeTransfer(address(swapHelper), paramClaimPrize.amountGas);
 
     uint256 amountMatic = executeSwapForMatic(paramClaimPrize.amountGas);
 
-    IERC20(paramClaimPrize.gasToken).safeApprove(address(gateway), prize);
+    IERC20(paramClaimPrize.gasToken).approve(address(gateway), prize);
     delete winners[paramClaimPrize.roundId];
-    userData[paramClaimPrize.user].listWin = Utils.changeStatusDetailWin(paramClaimPrize.roundId, getUserData(paramClaimPrize.user).listWin);
 
     bytes memory payload = abi.encode(paramClaimPrize.user);
 
@@ -366,9 +370,7 @@ contract GTSave is AxelarExecutable, ReentrancyGuard {
   
   function getClaimablePrize() public view returns (uint256) {
     DataTypes.ReserveData memory reserve = iPool.getReserveData(address(usdc));
-    uint256 scaledBalance = aToken.scaledBalanceOf(address(this));
-    uint256 prize = (scaledBalance.mul(reserve.liquidityIndex).div(1e27)).sub(totalDeposit);
-    return prize;
+    return (aToken.scaledBalanceOf(address(this)).mul(reserve.liquidityIndex).div(1e27)).sub(totalDeposit);
   }
 
   function getUserData(address user) public userExist(user) view returns (Types.UserData memory){
@@ -383,9 +385,12 @@ contract GTSave is AxelarExecutable, ReentrancyGuard {
   }
 
   function getFee(address _user) internal view returns (uint256) {
-    uint256 decimalPercent = 3;
-    uint256 fee = userData[_user].depositDate > block.timestamp - MIN_DEPOSIT_DURATION ? decimalPercent.div(1000) : 0 ;
+    uint256 fee = userData[_user].depositDate > block.timestamp - MIN_DEPOSIT_DURATION ? uint256(3).div(1000) : 0 ;
     return fee;
+  }
+
+  function setVrfConsumer(address _consumer) external onlyOwner {
+    vrfConsumer = _consumer;
   }
 
 }

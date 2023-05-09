@@ -72,6 +72,5 @@ library Types {
   struct DetailWin {
     uint256 roundId;
     uint256 prize;
-    bool isClaim;
   }
 }

@@ -8,37 +8,29 @@ async function getRate() {
   const polygon = chains.filter((item) => item.name === "Polygon");
   const provider = new ethers.providers.JsonRpcProvider(polygon[0].rpc);
   const signer = new ethers.Wallet(process.env.PRIV_KEY, provider);
-  const amount = ethers.utils.parseUnits("5", "6");
+  const amount = ethers.utils.parseUnits("10000", "6");
 
   const swapHelper = new Contract(
     polygon[0].contractAddress,
     GTSave.abi,
     signer
   );
-  const e = await swapHelper.getUserData(
-    "0x694aCF4DFb7601F92A0D2a41cdEC5bf7726C7294"
-  );
-  console.log(e.listWin);
-  // const d = await swapHelper.getUserData(
-  //   "0x1cBef56F09317ca4FB110cF3eDdF3Bcc7DeAE6A5"
-  // );
-  // console.log(d);
-  // const tokenContract = new Contract(polygon[0].usdc, ERC20.abi, signer);
-  // const tokenaUSDC = new Contract(polygon[0].axlToken, ERC20.abi, signer);
-  // const d = await tokenaUSDC.approve(swapHelper.address, amount);
-  // d.wait();
-  // console.log(d);
-  // console.log("approved");
+  const tokenContract = new Contract(polygon[0].usdc, ERC20.abi, signer);
+  const tokenaUSDC = new Contract(polygon[0].axlToken, ERC20.abi, signer);
+  const d = await tokenContract.approve(swapHelper.address, amount);
+  d.wait();
+  console.log(d);
+  console.log("approved");
   // const r = await swapHelper.Withdraw(10010000000, {
   //   gasLimit: 500000,
   // });
   // r.wait();
   // console.log(r);
-  // const e = await swapHelper.deposit(amount, {
-  //   gasLimit: 500000,
-  // });
-  // e.wait();
-  // console.log(e);
+  const e = await swapHelper.deposit(amount, {
+    gasLimit: 500000,
+  });
+  e.wait();
+  console.log(e);
   // const data = await swapHelper.Withdraw(ethers.utils.parseUnits("3", "6"), {
   //   gasLimit: 300000,
   // });

@@ -8,6 +8,15 @@ require("dotenv").config();
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
   solidity: "0.8.9",
+  solidity: {
+    version: "0.8.9",
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 200,
+      },
+    },
+  },
   networks: {
     "polygon-testnet": {
       url: "https://rpc-mumbai.maticvigil.com",
@@ -26,12 +35,6 @@ module.exports = {
   etherscan: {
     apiKey: {
       polygonMumbai: process.env.POLYGONSCAN_API_KEY,
-    },
-  },
-  settings: {
-    optimizer: {
-      enabled: true,
-      runs: 200,
     },
   },
 };

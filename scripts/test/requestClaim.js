@@ -19,8 +19,8 @@ async function main() {
   const polygon = chains.filter((item) => item.name === "Polygon");
   const provider = new ethers.providers.JsonRpcProvider(avalanche[0].rpc);
   const providerPol = new ethers.providers.JsonRpcProvider(polygon[0].rpc);
-  const signerPol = new ethers.Wallet(process.env.PRIV_KEY, providerPol);
-  const signer = new ethers.Wallet(process.env.PRIV_KEY, provider);
+  const signerPol = new ethers.Wallet(process.env.PRIV_KEY2, providerPol);
+  const signer = new ethers.Wallet(process.env.PRIV_KEY2, provider);
   const amount = ethers.utils.parseUnits("5", "6");
 
   console.log("Start testing to request withdraw..");
@@ -91,7 +91,7 @@ async function main() {
 
   const tx = await gTSaveConnector.requestClaimPrize(
     amountUsdc,
-    10000000,
+    10000001,
     polygon[0].contractAddress,
     {
       value: ethers.BigNumber.from(gasFee),
