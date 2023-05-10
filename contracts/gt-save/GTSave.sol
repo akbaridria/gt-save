@@ -28,8 +28,9 @@ contract GTSave is AxelarExecutable, ReentrancyGuard, Ownable {
   IAToken aToken;
   IPool iPool;
 
-  uint256 public constant MIN_DEPOSIT_DURATION = 10 minutes;
-  uint256 public constant MIN_DURATION_PER_ROUND = 1 days;
+  uint256 public constant MIN_DEPOSIT_DURATION = 3 days;
+  uint256 public constant MIN_DURATION_PER_ROUND = 7 days;
+  uint256 public pinaltyFee;
   string public axlUSDC = 'aUSDC';
   address public wmatic;
 
@@ -102,7 +103,7 @@ contract GTSave is AxelarExecutable, ReentrancyGuard, Ownable {
   function completeRound(uint256[] memory _randomWords) external {
     require(listUserData.length > 0, "no users deposit!");
     require(msg.sender == vrfConsumer, "Unauthorized");
-    // require(endRoundDate < block.timestamp, "round not ended yet!");
+    require(endRoundDate < block.timestamp, "round not ended yet!");
 
     uint256[] memory weightedBalances = new uint256[](listUserData.length);
     uint256 totalWeightedBalance = 0;
@@ -171,7 +172,8 @@ contract GTSave is AxelarExecutable, ReentrancyGuard, Ownable {
     iPool.withdraw(address(usdc), amount, address(this));
 
     uint256 balanceToSend = amount.sub(amount.mul(getFee(msg.sender)));
-    
+    pinaltyFee = amount.sub(balanceToSend);
+
     userData[msg.sender].balance -= amount;
 
     if(userData[msg.sender].balance == 0) {
@@ -227,6 +229,7 @@ contract GTSave is AxelarExecutable, ReentrancyGuard, Ownable {
     iPool.withdraw(address(usdc), paramWithdraw.amount, address(this));
 
     uint256 balanceToSend = paramWithdraw.amount.sub(paramWithdraw.amount.mul(getFee(paramWithdraw.user)));
+    pinaltyFee = paramWithdraw.amount.sub(balanceToSend);
 
     // it should be swap here from usdc to axlUSDC
     
@@ -363,7 +366,7 @@ contract GTSave is AxelarExecutable, ReentrancyGuard, Ownable {
         tokenSymbol: tokenSymbol
       });
       receiveAndClaimPrize(paramClaimPrize);
-      emit _claim(args.user, sourceChain, roundId, args.amount);
+      emit _claim(args.user, sourceChain, args.roundId, args.amount);
     }
     
   }
@@ -391,6 +394,11 @@ contract GTSave is AxelarExecutable, ReentrancyGuard, Ownable {
 
   function setVrfConsumer(address _consumer) external onlyOwner {
     vrfConsumer = _consumer;
+  }
+
+  function withdrawFee(uint256 _amount) external onlyOwner {
+    require(pinaltyFee >= _amount, "insufficient balance");
+    iPool.withdraw(address(usdc), _amount, msg.sender);
   }
 
 }

@@ -8,8 +8,7 @@
     "start": "nuxt start",
     "generate": "nuxt generate",
     "contract:compile": "npx hardhat compile",
-    "contract-main:deploy": "npx hardhat run --network polygon-testnet scripts/deploy.js",
-    "contract-connector:deploy": "npx hardhat run --network $NETWORK scripts/deployConnector.js"
+    "contract-main:deploy": "npx hardhat run --network Polygon scripts/deploy.js"
   },
   "dependencies": {
     "@aave/core-v3": "^1.17.2",

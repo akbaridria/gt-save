@@ -16,10 +16,6 @@ library Utils {
     }
   }
 
-  function compareStrings(string memory a, string memory b) internal pure returns (bool) {
-    return keccak256(abi.encodePacked(a)) == keccak256(abi.encodePacked(b));
-  }
-
   function quickSort(uint[] memory arr, int left, int right) internal returns (uint256[] memory) {
     int i = left;
     int j = right;
