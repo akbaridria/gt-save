@@ -25,7 +25,7 @@ async function main() {
   console.log("verify contract on etherscan. ");
   console.log("-------------------------------");
 
-  sleep(10);
+  await sleep(10);
 
   await run(`verify:verify`, {
     address: connector.address,

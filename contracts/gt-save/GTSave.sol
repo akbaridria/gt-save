@@ -30,7 +30,6 @@ contract GTSave is AxelarExecutable, ReentrancyGuard, Ownable {
 
   uint256 public constant MIN_DEPOSIT_DURATION = 3 days;
   uint256 public constant MIN_DURATION_PER_ROUND = 7 days;
-  uint256 public pinaltyFee;
   string public axlUSDC = 'aUSDC';
   address public wmatic;
 
@@ -171,18 +170,15 @@ contract GTSave is AxelarExecutable, ReentrancyGuard, Ownable {
 
     iPool.withdraw(address(usdc), amount, address(this));
 
-    uint256 balanceToSend = amount.sub(amount.mul(getFee(msg.sender)));
-    pinaltyFee = amount.sub(balanceToSend);
-
     userData[msg.sender].balance -= amount;
 
     if(userData[msg.sender].balance == 0) {
       Utils.deleteArrayByValue(msg.sender, listUserData);
     }
 
-    usdc.safeTransfer(msg.sender, balanceToSend);
+    usdc.safeTransfer(msg.sender, amount);
 
-    emit _withdraw(msg.sender, 'Polygon', roundId, balanceToSend);
+    emit _withdraw(msg.sender, 'Polygon', roundId, amount);
   }
 
   function claim(uint256 _roundId) external validWinner(_roundId, msg.sender) nonReentrant {
@@ -228,9 +224,6 @@ contract GTSave is AxelarExecutable, ReentrancyGuard, Ownable {
 
     iPool.withdraw(address(usdc), paramWithdraw.amount, address(this));
 
-    uint256 balanceToSend = paramWithdraw.amount.sub(paramWithdraw.amount.mul(getFee(paramWithdraw.user)));
-    pinaltyFee = paramWithdraw.amount.sub(balanceToSend);
-
     // it should be swap here from usdc to axlUSDC
     
     userData[paramWithdraw.user].balance -= paramWithdraw.amount;
@@ -252,7 +245,7 @@ contract GTSave is AxelarExecutable, ReentrancyGuard, Ownable {
       destinationAddress: paramWithdraw.sourceAddress,
       payload: payload,
       symbol: paramWithdraw.tokenSymbol,
-      amount: balanceToSend,
+      amount: paramWithdraw.amount,
       refundAddress: paramWithdraw.user
     });
 
@@ -261,10 +254,10 @@ contract GTSave is AxelarExecutable, ReentrancyGuard, Ownable {
       destinationAddress: paramWithdraw.sourceAddress,
       payload: payload,
       symbol: paramWithdraw.tokenSymbol,
-      amount: balanceToSend
+      amount: paramWithdraw.amount
     });
  
-    IERC20(paramWithdraw.gasToken).approve(address(gateway), balanceToSend);
+    IERC20(paramWithdraw.gasToken).approve(address(gateway), paramWithdraw.amount);
     callBridge(payGas, axlCallWithToken, amountMatic);
   }
 
@@ -387,18 +380,8 @@ contract GTSave is AxelarExecutable, ReentrancyGuard, Ownable {
     return swapHelper.swapForMatic(amountIn, path, address(this));
   }
 
-  function getFee(address _user) internal view returns (uint256) {
-    uint256 fee = userData[_user].depositDate > block.timestamp - MIN_DEPOSIT_DURATION ? uint256(3).div(1000) : 0 ;
-    return fee;
-  }
-
   function setVrfConsumer(address _consumer) external onlyOwner {
     vrfConsumer = _consumer;
-  }
-
-  function withdrawFee(uint256 _amount) external onlyOwner {
-    require(pinaltyFee >= _amount, "insufficient balance");
-    iPool.withdraw(address(usdc), _amount, msg.sender);
   }
 
 }

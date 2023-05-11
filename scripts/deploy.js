@@ -53,7 +53,7 @@ async function main() {
   console.log("verify contract on polygonscan");
   console.log("-------------------------------");
 
-  sleep(10);
+  await sleep(10);
 
   await run(`verify:verify`, {
     address: gtSave.address,
