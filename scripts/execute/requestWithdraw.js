@@ -48,7 +48,8 @@ async function main() {
     EvmChain.AVALANCHE,
     EvmChain.POLYGON,
     GasToken.AVAX,
-    1000000
+    1000000,
+    1.5
   );
   console.log("etimated fee in avax: ", gasFee);
   console.log();
@@ -64,7 +65,8 @@ async function main() {
     EvmChain.POLYGON,
     EvmChain.AVALANCHE,
     GasToken.MATIC,
-    500000
+    500000,
+    1.5
   );
   const path = [polygon[0].axlToken, polygon[0].wmatic];
   const amountFee = ethers.BigNumber.from(feeBack);

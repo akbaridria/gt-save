@@ -27,8 +27,7 @@ contract GTSave is AxelarExecutable, ReentrancyGuard, Ownable {
   IERC20 usdc;
   IAToken aToken;
   IPool iPool;
-
-  uint256 public constant MIN_DEPOSIT_DURATION = 3 days;
+  
   uint256 public constant MIN_DURATION_PER_ROUND = 7 days;
   string public axlUSDC = 'aUSDC';
   address public wmatic;
@@ -382,6 +381,10 @@ contract GTSave is AxelarExecutable, ReentrancyGuard, Ownable {
 
   function setVrfConsumer(address _consumer) external onlyOwner {
     vrfConsumer = _consumer;
+  }
+
+  function isExecutable() external view returns (bool) {
+    return endRoundDate < block.timestamp;
   }
 
 }

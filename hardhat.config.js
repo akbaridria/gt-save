@@ -72,6 +72,10 @@ module.exports = {
       url: chains.filter((item) => item.name === "kava")[0].rpc,
       accounts: [process.env.PRIV_KEY, process.env.PRIV_KEY2],
     },
+    "ethereum-2": {
+      url: chains.filter((item) => item.name === "ethereum-2")[0].rpc,
+      accounts: [process.env.PRIV_KEY, process.env.PRIV_KEY2],
+    },
   },
   tenderly: {
     username: "akbaridria", // tenderly username (or organization name)
@@ -88,6 +92,7 @@ module.exports = {
       celo: process.env.CELOSCAN_API_KEY,
       arbitrumGoerli: process.env.ARBISCAN_API_KEY,
       optimisticGoerli: process.env.OPTIMISM_API_KEY,
+      goerli: process.env.ETHERSCAN_API_KEY,
     },
     customChains: [
       {
