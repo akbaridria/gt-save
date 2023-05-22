@@ -23,7 +23,7 @@ async function main() {
   const signer = new ethers.Wallet(process.env.PRIV_KEY, provider);
   const amount = ethers.utils.parseUnits("5", "6");
 
-  console.log("Start testing to request withdraw..");
+  console.log("Start testing to request claim prize..");
   console.log("-------------------------------------");
   console.log();
   const gTSaveConnector = new Contract(
@@ -48,14 +48,13 @@ async function main() {
     EvmChain.AVALANCHE,
     EvmChain.POLYGON,
     GasToken.AVAX,
-    1000000
+    1000000,
+    1.5
   );
   console.log("etimated fee in avax: ", gasFee);
   console.log();
 
-  console.log(
-    "get estimated swap for native token on dest chain to send back token..."
-  );
+  console.log("get estimated fee on dest chain to send back token...");
   console.log(
     "-----------------------------------------------------------------------"
   );
@@ -63,38 +62,21 @@ async function main() {
   const feeBack = await api.estimateGasFee(
     EvmChain.POLYGON,
     EvmChain.AVALANCHE,
-    GasToken.MATIC,
-    500000
+    GasToken.AVAX,
+    500000,
+    1.5
   );
-  const path = [polygon[0].axlToken, polygon[0].wmatic];
   const amountFee = ethers.BigNumber.from(feeBack);
-  const amountUsdc = await swapHelper.getAmountYForX(amountFee, path);
-  console.log(
-    "amount of aUSDC to send to desc chain as fee : ",
-    amountUsdc.toString()
-  );
-
-  console.log("approveing ausdc");
-  console.log("-----------------");
-  const approvalTx = await tokenContract.approve(
-    gTSaveConnector.address,
-    amountUsdc,
-    {
-      gasLimit: 300000,
-    }
-  );
-  await approvalTx.wait();
-  console.log("approved!");
-
-  console.log("sending tx to request deposit..");
+  console.log("estimated fee back in avax : ", feeBack);
+  console.log();
+  console.log("sending tx to request claim..");
   console.log("-------------------------------");
 
   const tx = await gTSaveConnector.requestClaimPrize(
-    amountUsdc,
     10000000,
     polygon[0].contractAddress,
     {
-      value: ethers.BigNumber.from(gasFee),
+      value: ethers.BigNumber.from(gasFee).add(amountFee),
       gasLimit: 500000,
     }
   );

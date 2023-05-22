@@ -14,7 +14,6 @@ import {IAToken} from "@aave/core-v3/contracts/interfaces/IAToken.sol";
 import "@aave/core-v3/contracts/interfaces/IPool.sol";
 
 import "../Types.sol";
-import "../SwapHelper.sol";
 import "../Utils.sol";
 
 contract GTSave is AxelarExecutable, ReentrancyGuard, Ownable {
@@ -23,7 +22,6 @@ contract GTSave is AxelarExecutable, ReentrancyGuard, Ownable {
 
 
   IAxelarGasService gasReceiver;
-  SwapHelper swapHelper;
   IERC20 usdc;
   IAToken aToken;
   IPool iPool;
@@ -36,8 +34,8 @@ contract GTSave is AxelarExecutable, ReentrancyGuard, Ownable {
   uint256 public prizes;
   uint256 public totalDeposit;
 
-  uint256 startRoundDate = block.timestamp;
-  uint256 endRoundDate = block.timestamp + MIN_DURATION_PER_ROUND;
+  uint256 public startRoundDate = block.timestamp;
+  uint256 public endRoundDate = block.timestamp + MIN_DURATION_PER_ROUND;
 
   address[] public listUserData;
   mapping(address => Types.UserData) public userData;
@@ -72,7 +70,6 @@ contract GTSave is AxelarExecutable, ReentrancyGuard, Ownable {
     address _usdc, 
     address _aToken, 
     address _poolUsdc,
-    address _univRouter,
     address _wmatic
     ) AxelarExecutable(_gateway) {
 
@@ -80,7 +77,6 @@ contract GTSave is AxelarExecutable, ReentrancyGuard, Ownable {
       usdc = IERC20(_usdc);
       aToken = IAToken(_aToken);
       iPool = IPool(_poolUsdc);
-      swapHelper = SwapHelper(_univRouter);
       wmatic = _wmatic;
 
   }
@@ -101,7 +97,7 @@ contract GTSave is AxelarExecutable, ReentrancyGuard, Ownable {
   function completeRound(uint256[] memory _randomWords) external {
     require(listUserData.length > 0, "no users deposit!");
     require(msg.sender == vrfConsumer, "Unauthorized");
-    require(endRoundDate < block.timestamp, "round not ended yet!");
+    require(endRoundDate <= block.timestamp, "round not ended yet!");
 
     uint256[] memory weightedBalances = new uint256[](listUserData.length);
     uint256 totalWeightedBalance = 0;
@@ -211,10 +207,6 @@ contract GTSave is AxelarExecutable, ReentrancyGuard, Ownable {
     
   }
   
-  receive() external payable {}
-  
-  fallback() external payable {}
-  
   function receiveAndWithdraw(Types.ParameterWithdraw memory paramWithdraw) internal userExist(paramWithdraw.user) {
 
     require(userData[paramWithdraw.user].balance >= paramWithdraw.amount, "insufficient balance ");
@@ -230,23 +222,8 @@ contract GTSave is AxelarExecutable, ReentrancyGuard, Ownable {
     if(userData[paramWithdraw.user].balance == 0) {
       Utils.deleteArrayByValue(paramWithdraw.user, listUserData);
     }
-    
-    IERC20(paramWithdraw.gasToken).approve(address(swapHelper), paramWithdraw.amountGas);
-    IERC20(paramWithdraw.gasToken).safeTransfer(address(swapHelper), paramWithdraw.amountGas);
-
-    uint256 amountMatic = executeSwapForMatic(paramWithdraw.amountGas);
 
     bytes memory payload = abi.encode(paramWithdraw.user);
-
-    Types.PayGas memory payGas = Types.PayGas({
-      sender: address(this),
-      destinationChain: paramWithdraw.sourceChain,
-      destinationAddress: paramWithdraw.sourceAddress,
-      payload: payload,
-      symbol: paramWithdraw.tokenSymbol,
-      amount: paramWithdraw.amount,
-      refundAddress: paramWithdraw.user
-    });
 
     Types.AxlCallWithToken memory axlCallWithToken = Types.AxlCallWithToken({
       destinationChain: paramWithdraw.sourceChain,
@@ -257,7 +234,7 @@ contract GTSave is AxelarExecutable, ReentrancyGuard, Ownable {
     });
  
     IERC20(paramWithdraw.gasToken).approve(address(gateway), paramWithdraw.amount);
-    callBridge(payGas, axlCallWithToken, amountMatic);
+    callBridge(axlCallWithToken);
   }
 
   function receiveAndClaimPrize(Types.ParameterClaimPrize memory paramClaimPrize) internal validWinner(paramClaimPrize.roundId, paramClaimPrize.user) {
@@ -265,26 +242,11 @@ contract GTSave is AxelarExecutable, ReentrancyGuard, Ownable {
     uint256 prize = winners[paramClaimPrize.roundId].prize;
 
     // it should be swap here from usdc to axlusdc
-    
-    IERC20(paramClaimPrize.gasToken).approve(address(swapHelper), paramClaimPrize.amountGas);
-    IERC20(paramClaimPrize.gasToken).safeTransfer(address(swapHelper), paramClaimPrize.amountGas);
-
-    uint256 amountMatic = executeSwapForMatic(paramClaimPrize.amountGas);
 
     IERC20(paramClaimPrize.gasToken).approve(address(gateway), prize);
     delete winners[paramClaimPrize.roundId];
 
     bytes memory payload = abi.encode(paramClaimPrize.user);
-
-    Types.PayGas memory payGas = Types.PayGas({
-      sender: address(this),
-      destinationChain: paramClaimPrize.sourceChain,
-      destinationAddress: paramClaimPrize.sourceAddress,
-      payload: payload,
-      symbol: paramClaimPrize.tokenSymbol,
-      amount: prize,
-      refundAddress: paramClaimPrize.user
-    });
 
     Types.AxlCallWithToken memory axlCallWithToken = Types.AxlCallWithToken({
       destinationChain: paramClaimPrize.sourceChain,
@@ -294,23 +256,12 @@ contract GTSave is AxelarExecutable, ReentrancyGuard, Ownable {
       amount: prize
     });
   
-    callBridge(payGas, axlCallWithToken, amountMatic);
+    callBridge(axlCallWithToken);
   }
 
   function callBridge(
-    Types.PayGas memory payGas,
-    Types.AxlCallWithToken memory axlCallWithToken,
-    uint256 value
+    Types.AxlCallWithToken memory axlCallWithToken
     ) internal { 
-
-    gasReceiver.payNativeGasForContractCallWithToken{value: value}(
-      payGas.sender, 
-      payGas.destinationChain, 
-      payGas.destinationAddress, 
-      payGas.payload, 
-      payGas.symbol, 
-      payGas.amount,
-      payGas.refundAddress);
     
     gateway.callContractWithToken(
       axlCallWithToken.destinationChain, 
@@ -322,46 +273,52 @@ contract GTSave is AxelarExecutable, ReentrancyGuard, Ownable {
 
   function _executeWithToken(
     string calldata sourceChain,
-    string calldata sourceAddress,
+    string calldata ,
     bytes calldata payload,
-    string calldata tokenSymbol,
+    string calldata ,
     uint256
   ) internal override {
 
     Types.PayloadArgs memory args = abi.decode(payload, (Types.PayloadArgs));
-    
-    address gasToken = gateway.tokenAddresses(tokenSymbol);
 
     if(args.id == 0) {
       receiveAndDeposit(args.user, args.amount);
       emit _deposit(args.user, sourceChain, args.roundId, args.amount);
-    } else if (args.id == 1){
-      Types.ParameterWithdraw memory paramWithdraw = Types.ParameterWithdraw({
-        amount: args.amount,
-        user: args.user,
-        gasToken: gasToken,
-        amountGas: args.amountGas,
-        sourceChain: sourceChain,
-        sourceAddress: sourceAddress,
-        tokenSymbol: tokenSymbol
-      });
-      receiveAndWithdraw(paramWithdraw);
-      emit _withdraw(args.user, sourceChain, roundId, args.amount);
-    } else if(args.id == 2) {
-      Types.ParameterClaimPrize memory paramClaimPrize = Types.ParameterClaimPrize({
-        user: args.user,
-        roundId: args.roundId,
-        sourceChain: sourceChain,
-        amountGas: args.amountGas,
-        gasToken: gasToken,
-        sourceAddress: sourceAddress,
-        tokenSymbol: tokenSymbol
-      });
-      receiveAndClaimPrize(paramClaimPrize);
-      emit _claim(args.user, sourceChain, args.roundId, args.amount);
     }
-    
   }
+
+   function _execute(
+        string calldata sourceChain,
+        string calldata sourceAddress,
+        bytes calldata payload
+    ) internal override {
+        Types.PayloadArgs memory args = abi.decode(payload, (Types.PayloadArgs));
+        address gasToken = gateway.tokenAddresses(axlUSDC);
+
+        if (args.id == 1){
+          Types.ParameterWithdraw memory paramWithdraw = Types.ParameterWithdraw({
+            amount: args.amount,
+            user: args.user,
+            gasToken: gasToken,
+            sourceChain: sourceChain,
+            sourceAddress: sourceAddress,
+            tokenSymbol: axlUSDC
+          });
+          receiveAndWithdraw(paramWithdraw);
+          emit _withdraw(args.user, sourceChain, roundId, args.amount);
+        } else if(args.id == 2) {
+          Types.ParameterClaimPrize memory paramClaimPrize = Types.ParameterClaimPrize({
+            user: args.user,
+            roundId: args.roundId,
+            sourceChain: sourceChain,
+            gasToken: gasToken,
+            sourceAddress: sourceAddress,
+            tokenSymbol: axlUSDC
+          });
+          receiveAndClaimPrize(paramClaimPrize);
+          emit _claim(args.user, sourceChain, args.roundId, args.amount);
+        }
+    }
   
   function getClaimablePrize() public view returns (uint256) {
     DataTypes.ReserveData memory reserve = iPool.getReserveData(address(usdc));
@@ -372,19 +329,7 @@ contract GTSave is AxelarExecutable, ReentrancyGuard, Ownable {
     return userData[user];
   }
 
-  function executeSwapForMatic(uint256 amountIn) internal returns (uint256) {
-    address[] memory path = new address[](2);
-    path[0] = gateway.tokenAddresses(axlUSDC);
-    path[1] = wmatic;
-    return swapHelper.swapForMatic(amountIn, path, address(this));
-  }
-
   function setVrfConsumer(address _consumer) external onlyOwner {
     vrfConsumer = _consumer;
   }
-
-  function isExecutable() external view returns (bool) {
-    return endRoundDate < block.timestamp;
-  }
-
 }

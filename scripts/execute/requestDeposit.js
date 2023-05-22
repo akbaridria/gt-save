@@ -45,10 +45,11 @@ async function main() {
 
   const api = new AxelarQueryAPI({ environment: Environment.TESTNET });
   const gasFee = await api.estimateGasFee(
-    EvmChain.CELO,
+    EvmChain.AVALANCHE,
     EvmChain.POLYGON,
     GasToken.AVAX,
-    1000000
+    1000000,
+    1.5
   );
   console.log("etimated fee in avax: ", gasFee);
 

@@ -54,9 +54,7 @@ async function main() {
   console.log("etimated fee in avax: ", gasFee);
   console.log();
 
-  console.log(
-    "get estimated swap for native token on dest chain to send back token..."
-  );
+  console.log("get estimated fee on dest chain to send back token...");
   console.log(
     "-----------------------------------------------------------------------"
   );
@@ -64,39 +62,21 @@ async function main() {
   const feeBack = await api.estimateGasFee(
     EvmChain.POLYGON,
     EvmChain.AVALANCHE,
-    GasToken.MATIC,
+    GasToken.AVAX,
     500000,
     1.5
   );
-  const path = [polygon[0].axlToken, polygon[0].wmatic];
   const amountFee = ethers.BigNumber.from(feeBack);
-  const amountUsdc = await swapHelper.getAmountYForX(amountFee, path);
-  console.log(
-    "amount of aUSDC to send to desc chain as fee : ",
-    amountUsdc.toString()
-  );
-
-  console.log("approveing ausdc");
-  console.log("-----------------");
-  const approvalTx = await tokenContract.approve(
-    gTSaveConnector.address,
-    amountUsdc,
-    {
-      gasLimit: 300000,
-    }
-  );
-  await approvalTx.wait();
-  console.log("approved!");
-
-  console.log("sending tx to request deposit..");
+  console.log("estimated fee back in avax : ", feeBack);
+  console.log();
+  console.log("sending tx to request withdraw..");
   console.log("-------------------------------");
 
   const tx = await gTSaveConnector.requestWithdraw(
     amount,
-    amountUsdc,
     polygon[0].contractAddress,
     {
-      value: ethers.BigNumber.from(gasFee),
+      value: ethers.BigNumber.from(gasFee).add(amountFee),
       gasLimit: 500000,
     }
   );

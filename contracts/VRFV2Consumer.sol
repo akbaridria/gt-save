@@ -25,7 +25,7 @@ contract VRFV2Consumer is VRFConsumerBaseV2, ConfirmedOwner {
   event RequestSent(uint256 requestId, uint32 numWords);
   event RequestFulfilled(uint256 requestId, uint256[] randomWords);
   
-  constructor(uint64 _subscriptionId, bytes32 _keyhash, address _vrfCoordinatior, address payable _gtSave) VRFConsumerBaseV2(_vrfCoordinatior) ConfirmedOwner(msg.sender)  {
+  constructor(uint64 _subscriptionId, bytes32 _keyhash, address _vrfCoordinatior, address _gtSave) VRFConsumerBaseV2(_vrfCoordinatior) ConfirmedOwner(msg.sender)  {
     gtSave = GTSave(_gtSave);
     sId = _subscriptionId;
     keyHash = _keyhash;

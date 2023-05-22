@@ -10,7 +10,6 @@ async function main() {
   const gasReceiver = chains.filter((item) => item.name === network.name)[0]
     .gasReceiver;
 
-  console.log(network);
   console.log("deploying contract-connector...");
   console.log("--------------------------------");
 
@@ -39,7 +38,6 @@ async function main() {
 
     console.log("contract address verified on etherscan!");
   }
- 
 
   const filePath = path.join(__dirname, "../data/chains.json");
   await fs.writeFileSync(filePath, JSON.stringify(chains, null, 2));

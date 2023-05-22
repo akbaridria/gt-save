@@ -41,11 +41,16 @@ library Types {
     uint256 amount;
   }
 
+  struct AxlCall {
+    string destinationChain;
+    string destinationAddress;
+    bytes payload;
+  }
+
   struct ParameterWithdraw {
     uint256 amount;
     address user;
     address gasToken;
-    uint256 amountGas;
     string sourceChain;
     string sourceAddress;
     string tokenSymbol;
@@ -55,7 +60,6 @@ library Types {
     address user;
     uint256 roundId;
     string sourceChain;
-    uint256 amountGas;
     address gasToken;
     string sourceAddress;
     string tokenSymbol;
@@ -65,7 +69,6 @@ library Types {
     address user;
     uint256 amount;
     uint256 id;
-    uint256 amountGas;
     uint256 roundId;
   }
 

@@ -7,12 +7,12 @@ async function main() {
   const chains = require("../data/chains.json");
   const polygon = chains.filter((item) => item.name === "Polygon")[0];
 
-  console.log("deploying swaphelper");
-  const SwapHelper = await ethers.getContractFactory("SwapHelper");
-  const swapHelper = await SwapHelper.deploy(polygon.router);
-  await swapHelper.deployed();
-  polygon.swapHelper = swapHelper.address;
-  console.log("deploy swap helper : ", swapHelper.address);
+  // console.log("deploying swaphelper");
+  // const SwapHelper = await ethers.getContractFactory("SwapHelper");
+  // const swapHelper = await SwapHelper.deploy(polygon.router);
+  // await swapHelper.deployed();
+  // polygon.swapHelper = swapHelper.address;
+  // console.log("deploy swap helper : ", swapHelper.address);
 
   console.log("----------------------------------------");
   console.log("deploying main contract...");
@@ -23,7 +23,6 @@ async function main() {
     polygon.usdc,
     polygon.aToken,
     polygon.poolUsdc,
-    swapHelper.address,
     polygon.wmatic
   );
   await gtSave.deployed();
@@ -63,7 +62,6 @@ async function main() {
       polygon.usdc,
       polygon.aToken,
       polygon.poolUsdc,
-      swapHelper.address,
       polygon.wmatic,
     ],
   });
