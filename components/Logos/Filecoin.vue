@@ -8,10 +8,10 @@
     xmlns:xlink="http://www.w3.org/1999/xlink"
   >
     <circle cx="42" cy="42" r="42" fill="#0090FF" />
-    <rect x="13" y="13" width="58" height="58" fill="url(#pattern0)" />
+    <rect x="13" y="13" width="58" height="58" fill="url(#pattern2)" />
     <defs>
       <pattern
-        id="pattern0"
+        id="pattern2"
         patternContentUnits="objectBoundingBox"
         width="1"
         height="1"

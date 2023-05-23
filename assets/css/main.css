@@ -5,12 +5,21 @@
 @tailwind utilities;
 
 
+.nuxt-link-exact-active {
+  opacity: 1 !important;
+}
+
 @layer base {
   html {
     font-family: 'Sintony', sans-serif;
   }
   .logo-font {
     font-family: 'Delicious Handrawn', cursive;
+  }
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
   }
 }
 

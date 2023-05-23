@@ -1,17 +1,17 @@
 <template>
   <svg
-    :width="size"
-    :height="size"
+    width="84"
+    height="84"
     viewBox="0 0 84 84"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     xmlns:xlink="http://www.w3.org/1999/xlink"
   >
     <circle cx="42" cy="42" r="42" fill="#F8F9F9" />
-    <rect x="21" y="21" width="42" height="42" fill="url(#pattern0)" />
+    <rect x="21" y="21" width="42" height="42" fill="url(#pattern1)" />
     <defs>
       <pattern
-        id="pattern0"
+        id="pattern1"
         patternContentUnits="objectBoundingBox"
         width="1"
         height="1"
@@ -34,9 +34,9 @@ export default {
     size: {
       Type: Number,
       required: false,
-      default: 24
-    }
-  }
+      default: 24,
+    },
+  },
 };
 </script>
 

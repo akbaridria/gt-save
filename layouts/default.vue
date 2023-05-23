@@ -5,6 +5,7 @@
     <div class="container px-4 min-h-screen mx-auto relative">
       <div>
         <Nuxt />
+        <Footer />
       </div>
     </div>
   </div>

@@ -4,9 +4,9 @@
      <div class="flex items-center justify-between py-5">
         <div class="flex items-center gap-10">
           <img src="/images/logo.svg" alt="">
-          <div>Home</div>
-          <div>Deposit</div>
-          <div>Account</div>
+          <NuxtLink class="opacity-50" to="/">Home</NuxtLink>
+          <NuxtLink class="opacity-50" to="/deposit">Deposit</NuxtLink>  
+          <NuxtLink class="opacity-50" to="/account">Account</NuxtLink>
         </div>
         <div class="flex gap-3">
           <div class="border-[1px] border-netral-300 p-[0.4375rem] rounded-lg flex gap-2 items-center">

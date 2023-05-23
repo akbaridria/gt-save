@@ -74,14 +74,10 @@
           <img :src="`images/${item.image}`" class="rounded" alt="">
           <div class="line-clamp-1">{{ item.title }}</div>
           <div class="line-clamp-3">{{ item.description }}</div>
-          <a :href="item.link" class="flex gap-2 items-center"> Read <IconsExternalLink /></a>
+          <a :href="item.link" target="_blank" class="flex gap-2 items-center"> Read <IconsExternalLink /></a>
         </div>
       </div>
     </section>
-    
-    <div>
-      <div v-for="index in 10" :key="index">1</div>
-    </div>
   </div>
 </template>
 
