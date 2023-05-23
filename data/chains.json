@@ -14,7 +14,8 @@
     "router": "0x8954AfA98594b838bda56FE4C12a09D7739D179b",
     "swapHelper": "0x8659438807d4666cB2AF350D9fB69bB69505c18A",
     "wmatic": "0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889",
-    "axlToken": "0x2c852e740B62308c46DD29B982FBb650D063Bd07"
+    "axlToken": "0x2c852e740B62308c46DD29B982FBb650D063Bd07",
+    "logo": "LogosPolygon"
   },
   {
     "name": "Avalanche",
@@ -24,7 +25,8 @@
     "gasReceiver": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6",
     "contractAddress": "0xB00191b365784f74fc23Dd4C46B503d6063D1570",
     "axlToken": "0x57F1c63497AEe0bE305B8852b354CEc793da43bB",
-    "isEtherscan": true
+    "isEtherscan": true,
+    "logo": "LogosAvalanche"
   },
   {
     "name": "binance",
@@ -34,7 +36,8 @@
     "gasReceiver": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6",
     "contractAddress": "0x0a3B94b93395095204aa5c09330eC1b38bc4EE77",
     "axlToken": "0xc2fA98faB811B785b81c64Ac875b31CC9E40F9D2",
-    "isEtherscan": true
+    "isEtherscan": true,
+    "logo": "LogosBsc"
   },
   {
     "name": "Fantom",
@@ -44,7 +47,8 @@
     "gasReceiver": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6",
     "contractAddress": "0xBEEC84181eC923C0D700DFBCF923b9867cba98D0",
     "axlToken": "0x75Cc4fDf1ee3E781C1A3Ee9151D5c6Ce34Cf5C61",
-    "isEtherscan": true
+    "isEtherscan": true,
+    "logo": "LogosFantom"
   },
   {
     "name": "Moonbeam",
@@ -54,7 +58,8 @@
     "gasReceiver": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6",
     "contractAddress": "0xECf71718B5fEF085cC29F87045b03411c6E1707C",
     "axlToken": "0xD1633F7Fb3d716643125d6415d4177bC36b7186b",
-    "isEtherscan": true
+    "isEtherscan": true,
+    "logo": "LogosMoonbeam"
   },
   {
     "name": "aurora",
@@ -64,7 +69,8 @@
     "gasReceiver": "0xA2C84547Db9732B27D45c06218DDAEFcc71e452D",
     "contractAddress": "0x12aaA99572B037b893Cb37D06d42c28a87AaAC37",
     "axlToken": "0xFfB4749710EC6286b3A0dC2F24165DA622dA2ff5",
-    "isEtherscan": false
+    "isEtherscan": false,
+    "logo": "LogosAurora"
   },
   {
     "name": "celo",
@@ -74,7 +80,8 @@
     "gasReceiver": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6",
     "contractAddress": "0x2aF20b65859513B08f932F514f9df8D0D7141f7E",
     "axlToken": "0x254d06f33bDc5b8ee05b2ea472107E300226659A",
-    "isEtherscan": true
+    "isEtherscan": true,
+    "logo": "LogosCelo"
   },
   {
     "name": "arbitrum",
@@ -84,7 +91,8 @@
     "gasReceiver": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6",
     "contractAddress": "0x0cC17bB27A6ecaa973EbcB45c1d355e70284008a",
     "axlToken": "0x254d06f33bDc5b8ee05b2ea472107E300226659A",
-    "isEtherscan": true
+    "isEtherscan": true,
+    "logo": "LogosArbitrum"
   },
   {
     "name": "optimism",
@@ -94,7 +102,8 @@
     "gasReceiver": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6",
     "contractAddress": "0x0C24805507556313f0C3633558fc5e5A9dAE1d36",
     "axlToken": "0x254d06f33bDc5b8ee05b2ea472107E300226659A",
-    "isEtherscan": true
+    "isEtherscan": true,
+    "logo": "LogosOptimism"
   },
   {
     "name": "base",
@@ -104,7 +113,8 @@
     "gasReceiver": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6",
     "contractAddress": "0xfBf8C14e57EFce2cDafd4a9c30930310ABeb4aB6",
     "axlToken": "0x254d06f33bDc5b8ee05b2ea472107E300226659A",
-    "isEtherscan": false
+    "isEtherscan": false,
+    "logo": "LogosBase"
   },
   {
     "name": "filecoin",
@@ -114,17 +124,8 @@
     "gasReceiver": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6",
     "contractAddress": "0x12aaA99572B037b893Cb37D06d42c28a87AaAC37",
     "axlToken": "0x254d06f33bDc5b8ee05b2ea472107E300226659A",
-    "isEtherscan": false
-  },
-  {
-    "name": "kava",
-    "chainId": 2221,
-    "rpc": "https://evm.testnet.kava.io",
-    "gateway": "0xC8D18F85cB0Cee5C95eC29c69DeaF6cea972349c",
-    "gasReceiver": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6",
-    "contractAddress": "0x1aa715364a211d2f9dde4b49259ef0c844742104",
-    "axlToken": "0xAa03872057AD496Bd6f3eE85b85e1e4DABdb1a5d",
-    "isEtherscan": false
+    "isEtherscan": false,
+    "logo": "LogosFilecoin"
   },
   {
     "name": "ethereum-2",
@@ -134,6 +135,7 @@
     "gasReceiver": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6",
     "contractAddress": "0x810A7A8C6F005d0d043c9504d9E773CAB0dF22F8",
     "axlToken": "0x254d06f33bDc5b8ee05b2ea472107E300226659A",
-    "isEtherscan": true
+    "isEtherscan": true,
+    "logo": "LogosEthereum"
   }
 ]

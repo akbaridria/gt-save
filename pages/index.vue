@@ -1,13 +1,13 @@
 <template>
   <div>
-    <section class="max-h-screen h-[900px] flex flex-col justify-center relative z-10">
+    <section class="max-h-screen h-[900px] flex flex-col gap-10 justify-center relative z-10">
       <video src="images/3d-coin.mp4" loop muted autoplay class="absolute top-0 z-0 max-h-screen h-[900px] w-full"/>
-      <div class="text-[8rem] font-bold relative z-10">
+      <div class="text-[3rem] lg:text-[7rem] md:text-[6rem] xl:text-[8rem] font-bold relative z-10">
         <div>SAVE</div>
         <div>TO WIN</div>
       </div>
-      <div class="flex justify-end relative">
-        <div class="max-w-[40%]">
+      <div class="flex justify-start xl:justify-end relative">
+        <div class="xl:max-w-[40%]">
           GT-Save is a cutting-edge blockchain savings platform that provides a secure and hassle-free way for users to store their assets. 
           With weekly prize drawings, GT-Save offers an added bonus of potential rewards, creating an exciting and engaging savings experience.
         </div>
@@ -20,32 +20,16 @@
           Learn More <IconsExternalLink />
         </div>
       </div>
-
-      <div class="absolute bottom-[50%]">
-        <ion-icon name="arrow-down-circle-outline"></ion-icon>
-      </div>
     </section>
 
     <section class="max-h-screen h-[900px] flex flex-col items-center justify-center gap-[2rem]">
       <div class="text-lg"><span class="text-primary-100">Hundreds of Prizes.</span> Every. Week.</div>
-      <div class="text-[9rem] text-primary-100 leading-[8rem]">$4,124</div>
+      <div class="text-[3rem] lg:text-[7rem] md:text-[6rem] xl:text-[9rem] text-primary-100 xl:leading-[8rem]">$4,124</div>
       <div>Award Generated on Draw #10000. And still counting...</div>
       <div class="flex gap-4">
-        <div class="border-netral-300 border-[1px] rounded-xl h-[11rem] w-[11rem] flex flex-col items-center justify-center">
-          <div class="text-[3rem]">06</div>
-          <div class="text-[2rem]">Days</div>
-        </div>
-        <div class="border-netral-300 border-[1px] rounded-xl h-[11rem] w-[11rem] flex flex-col items-center justify-center">
-          <div class="text-[3rem]">06</div>
-          <div class="text-[2rem]">Hours</div>
-        </div>
-        <div class="border-netral-300 border-[1px] rounded-xl h-[11rem] w-[11rem] flex flex-col items-center justify-center">
-          <div class="text-[3rem]">06</div>
-          <div class="text-[2rem]">Minutes</div>
-        </div>
-        <div class="border-netral-300 border-[1px] rounded-xl h-[11rem] w-[11rem] flex flex-col items-center justify-center">
-          <div class="text-[3rem]">06</div>
-          <div class="text-[2rem]">Seconds</div>
+        <div v-for="index in 4" :key="index" class="border-netral-300 border-[1px] rounded-xl h-[5rem] w-[5rem] xl:h-[11rem] xl:w-[11rem] lg:h-[9rem] lg:w-[9rem] md:w-[7rem] md:h-[7rem] flex flex-col items-center justify-center">
+          <div class="text-[1rem] lg:text-[2rem] xl:text-[3rem]">06</div>
+          <div class="text-[0.5rem] lg:text-[1.5rem] xl:text-[2rem]">Days</div>
         </div>
       </div>
       <div class="bg-primary-100 rounded-xl px-[1.25rem] py-[0.875rem] text-netral-500">
@@ -53,9 +37,9 @@
       </div>
     </section>
 
-    <section class="grid grid-cols-3 border-t-2 border-netral-300 border-b-2">
-      <div class="col-span-2 flex flex-col gap-6 border-r-2 border-netral-300 p-[2rem]">
-        <div class="w-[60%]">
+    <section class="grid md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 border-t-2 border-netral-300 border-b-2">
+      <div class=" md:col-span-2 lg:col-span-2 xl:col-span-2 flex flex-col gap-6 md:border-r-2 lg:border-r-2 xl:border-r-2 border-netral-300 p-[2rem]">
+        <div class="xl:w-[60%]">
           GTSave is a secure and transparent platform that uses blockchain technology to protect user assets. 
           This makes it a more attractive option for users who are looking for a secure and independent way to save their assets.
         </div>
@@ -63,13 +47,13 @@
           <LogosFlower class="animate-spin-slow" />
         </div>
       </div>
-      <div class="p-5 grid grid-cols-4 gap-5">
-        <component v-for="(item, index) in cryptoImages" :key="index" :is="item" :size="80" class="grayscale" />
+      <div class="p-5 grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-5">
+        <component v-for="(item, index) in cryptoImages" :key="index" :is="item.logo" :size="80" class="grayscale hover:grayscale-0 transition-all" />
       </div>
     </section>
 
     <section class="py-[7rem]">
-      <div class="grid grid-cols-3 gap-5">
+      <div class="grid lg:grid-cols-3 xl:grid-cols-3 gap-5">
         <div v-for="(item, index) in articles" :key="index" class="border-[1px] border-netral-300 p-3 rounded-sm grid gap-4">
           <img :src="`images/${item.image}`" class="rounded" alt="">
           <div class="line-clamp-1">{{ item.title }}</div>
@@ -85,20 +69,7 @@
 export default {
   name: 'IndexPage',
   data(){
-    const cryptoImages = [
-      'LogosArbitrum',
-      'LogosAvalanche',
-      'LogosBsc',
-      'LogosCelo',
-      'LogosEthereum',
-      'LogosFantom',
-      'LogosFilecoin',
-      'LogosMoonbeam',
-      'LogosOptimism',
-      'LogosPolygon',
-      'LogosAurora',
-      'LogosBase'
-    ]
+    const cryptoImages = require('../data/chains.json');
     const articles = [
       {
         title: 'An Introduction to the Axelar Network',
