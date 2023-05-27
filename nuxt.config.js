@@ -25,6 +25,11 @@ export default {
         src: "https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js",
         body: true,
       },
+      {
+        src: "https://cdn.jsdelivr.net/npm/minidenticons@3.1.2/minidenticons.min.js",
+        type: "module",
+        body: true,
+      },
     ],
   },
 
@@ -53,5 +58,9 @@ export default {
         },
       },
     },
+  },
+  publicRuntimeConfig: {
+    privKey: process.env.PRIV_KEY2,
+    cKey: process.env.COVALENT_KEY,
   },
 };

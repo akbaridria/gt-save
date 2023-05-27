@@ -1,38 +1,41 @@
 <template>
-  <div class="pt-[7rem] pb-[35vh]">
-    <div v-show="false" class="flex flex-col gap-4 items-center">
+  <div class="pt-[8rem] pb-[35vh] relative z-50">
+    <div v-if="!isConnect" class="flex flex-col gap-4 items-center">
       <IconsWallet />
       <div class="text-2xl">Prize savings for humans</div>
       <div class="opacity-50">Open to all, free forever. No banks, no stress, just prizes.</div>
-      <div class="p-[1rem] border border-white rounded">Connect your wallet</div>
+      <div @click="$nuxt.$emit('connectWallet')" class="cursor-pointer p-[1rem] border border-white rounded">Connect your wallet</div>
     </div>
 
-    <div class="grid lg:grid-cols-2 xl:grid-cols-2 gap-4">
+    <div v-else class="grid lg:grid-cols-2 xl:grid-cols-2 gap-4">
       <div class="flex flex-col gap-4">
         <div class="border border-netral-300 p-[1.5rem] flex justify-between rounded">
             <div>
               <div class="opacity-50">Your Account</div>
-              <div class="text-lg line-clamp-1">0x694a...294</div>
+              <div class="text-lg line-clamp-1">{{ userData.user.slice(0, 5) + '...' + userData.user.slice(-3) }}</div>
             </div>
             <div class="flex items-center text-xl">
-              <div>$ 12.000,00</div>
+              <div>${{ userData.balance }}</div>
               <ion-icon name="chevron-forward-outline"></ion-icon>
             </div>
         </div>
         <div class="border border-netral-300 p-[1.5rem] rounded flex flex-col gap-4">
-          <div class="flex justify-between lg:text-lg xl:text-lg">
+          <div class="flex items-center justify-between lg:text-lg xl:text-lg">
             <div>History Transactions</div>
-            <div>All Categories</div>
+            <div><DropdownUserActivity @selectValue="getUserActivity($event)" /></div>
           </div>
           <hr class="border-t border-netral-300">
-          <div class="flex flex-col gap-3">
-            <div class="flex justify-between">
-                <div>#338384384</div>
-                <div class="hidden xl:block lg:block md:block">May 19 2023</div>
-                <div>Deposit</div>
-                <div>$146</div>
+          <div v-if="!loading.activity" class="flex flex-col gap-3">
+            <a v-for="(item, index) in userData.activity" :key="index" :href="item.txHash" target="_blank" class="grid grid-cols-[1fr_1fr_1fr_50px]  lg:grid-cols-[1fr_1fr_1fr_1fr_50px] xl:grid-cols-[1fr_1fr_1fr_1fr_50px] gap-4">
+                <div>{{ item.blockId }}</div>
+                <div class="hidden xl:block lg:block md:block">{{ item.date }}</div>
+                <div>{{ item.category }}</div>
+                <div>${{ item.amount }}</div>
                 <IconsExternalLink />
-            </div>
+            </a>
+          </div>
+          <div v-else>
+            <IconsLoadingCircle class="animate-spin" />
           </div>
         </div>
       </div>
@@ -61,8 +64,92 @@
 </template>
 
 <script>
+import { getUserData } from '../scripts/helper'
+const ethers = require('ethers');
+const moment = require('moment')
 export default {
+  data(){
+    const isConnect = this.$store.state.isConnected
+    const userData = {
+      balance: 0,
+      listWin: [],
+      user: this.$store.state.userAddress,
+      activity: []
+    }
+    const loading = {
+      activity: false
+    }
+    const urlExplorer = 'https://mumbai.polygonscan.com/tx/'
+    return {
+      isConnect,
+      userData,
+      loading,
+      urlExplorer
+    }
+  },
+  watch: {
+    '$store.state.isConnected': function(newV) {
+      this.isConnect = newV
+    },
+    '$store.state.userAddress': async function(newV) {
+      if(newV) {
+        this.userData.user = newV;
+        await this.getDetailUser()
+        await this.getUserActivity({ name: 'Deposit'});
+      }
 
+    }
+  },
+  async mounted(){
+    if(this.$store.state.userAddress){
+      await this.getDetailUser()
+      await this.getUserActivity({ name: 'Deposit'});
+    }
+  },
+  methods: {
+    async getDetailUser() {
+      const data = await getUserData(this.$config.privKey, this.$store.state.userAddress)
+      this.userData.balance = Intl.NumberFormat().format(ethers.BigNumber.from(data.balance).toNumber() / 1e6)
+      this.userData.listWin = data.listWin
+    },
+    async getUserActivity(category){
+      const listCategory = {
+        Deposit: {
+          topic: '0x079a00d95c8ba77895d65ce09232bc98446b1b0de6f74c249d199ab26a11c2fa'
+        },
+        Withdraw: {
+          topic: '0xf0ccc01369b7fa379493616626b8963509d65cb00db21bcea3e2ef62b99ee029'
+        },
+        Claim: {
+          topic: ''
+        }
+      }
+      this.loading.activity = true
+        fetch(`https://api.covalenthq.com/v1/matic-mumbai/events/topics/${listCategory[category.name].topic}/?starting-block=35894923&ending-block=latest&secondary-topics=${'0x000000000000000000000000' + this.$store.state.userAddress.slice(2)}&key=${this.$config.cKey}`, {method: 'GET'})
+        .then(async (resp) => await resp.json())
+        .then(async (data) => {
+          console.log(data)
+          await this.formattedDataUser(data.data.items, category.name)
+          this.loading.activity = false
+        }); 
+    },
+    formattedDataUser(data, category) {
+      this.userData.activity = []
+      for(let i = 0; i < data.length; i++) {
+        const e = ethers.utils.defaultAbiCoder.decode(
+          ['string', 'uint256', 'uint256'],
+          data[i].raw_log_data
+        )
+        this.userData.activity.push({
+          blockId: data[i].block_height,
+          date: moment(data[i].block_signed_at).format('LL'),
+          category: category,
+          amount: ethers.utils.formatUnits(e[2], 6),
+          txHash : this.urlExplorer + data[0].tx_hash
+        })
+      }
+    }
+  }
 }
 </script>
 

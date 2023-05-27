@@ -7,10 +7,10 @@
     xmlns="http://www.w3.org/2000/svg"
     xmlns:xlink="http://www.w3.org/1999/xlink"
   >
-    <rect width="22" height="22" fill="url(#pattern0)" />
+    <rect width="22" height="22" fill="url(#pattern1000)" />
     <defs>
       <pattern
-        id="pattern0"
+        id="pattern1000"
         patternContentUnits="objectBoundingBox"
         width="1"
         height="1"

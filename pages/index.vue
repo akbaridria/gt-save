@@ -24,12 +24,24 @@
 
     <section class="max-h-screen h-[900px] flex flex-col items-center justify-center gap-[2rem]">
       <div class="text-lg"><span class="text-primary-100">Hundreds of Prizes.</span> Every. Week.</div>
-      <div class="text-[3rem] lg:text-[7rem] md:text-[6rem] xl:text-[9rem] text-primary-100 xl:leading-[8rem]">$4,124</div>
-      <div>Award Generated on Draw #10000. And still counting...</div>
+      <div class="text-[3rem] lg:text-[7rem] md:text-[6rem] xl:text-[9rem] text-primary-100 xl:leading-[8rem]">${{ prize }}</div>
+      <div>Interest Generated on Draw <span class="font-bold">#{{ roundId }}</span>. And still counting...</div>
       <div class="flex gap-4">
-        <div v-for="index in 4" :key="index" class="border-netral-300 border-[1px] rounded-xl h-[5rem] w-[5rem] xl:h-[11rem] xl:w-[11rem] lg:h-[9rem] lg:w-[9rem] md:w-[7rem] md:h-[7rem] flex flex-col items-center justify-center">
-          <div class="text-[1rem] lg:text-[2rem] xl:text-[3rem]">06</div>
+        <div class="border-netral-300 border-[1px] rounded-xl h-[5rem] w-[5rem] xl:h-[11rem] xl:w-[11rem] lg:h-[9rem] lg:w-[9rem] md:w-[7rem] md:h-[7rem] flex flex-col items-center justify-center">
+          <div class="text-[1rem] lg:text-[2rem] xl:text-[3rem]">{{ countDown.days }}</div>
           <div class="text-[0.5rem] lg:text-[1.5rem] xl:text-[2rem]">Days</div>
+        </div>
+        <div class="border-netral-300 border-[1px] rounded-xl h-[5rem] w-[5rem] xl:h-[11rem] xl:w-[11rem] lg:h-[9rem] lg:w-[9rem] md:w-[7rem] md:h-[7rem] flex flex-col items-center justify-center">
+          <div class="text-[1rem] lg:text-[2rem] xl:text-[3rem]">{{ countDown.hours }}</div>
+          <div class="text-[0.5rem] lg:text-[1.5rem] xl:text-[2rem]">Hours</div>
+        </div>
+        <div class="border-netral-300 border-[1px] rounded-xl h-[5rem] w-[5rem] xl:h-[11rem] xl:w-[11rem] lg:h-[9rem] lg:w-[9rem] md:w-[7rem] md:h-[7rem] flex flex-col items-center justify-center">
+          <div class="text-[1rem] lg:text-[2rem] xl:text-[3rem]">{{ countDown.minutes }}</div>
+          <div class="text-[0.5rem] lg:text-[1.5rem] xl:text-[2rem]">Minutes</div>
+        </div>
+        <div class="border-netral-300 border-[1px] rounded-xl h-[5rem] w-[5rem] xl:h-[11rem] xl:w-[11rem] lg:h-[9rem] lg:w-[9rem] md:w-[7rem] md:h-[7rem] flex flex-col items-center justify-center">
+          <div class="text-[1rem] lg:text-[2rem] xl:text-[3rem]">{{ countDown.seconds }}</div>
+          <div class="text-[0.5rem] lg:text-[1.5rem] xl:text-[2rem]">Seconds</div>
         </div>
       </div>
       <div class="bg-primary-100 rounded-xl px-[1.25rem] py-[0.875rem] text-netral-500">
@@ -66,6 +78,9 @@
 </template>
 
 <script>
+import { getCountDown, getPrize, getRound } from '../scripts/helper'
+const moment = require('moment');
+
 export default {
   name: 'IndexPage',
   data(){
@@ -90,9 +105,42 @@ export default {
         link: 'https://axelar.network/blog/general-message-passing-and-how-can-it-change-web3'
       }
     ]
+    const countDown = {
+      days: 0,
+      hours: 0,
+      minutes: 0,
+      seconds: 0
+    }
+    const intervalId = 0
+    const prize = 0
+    const roundId = 0
     return {
       cryptoImages,
-      articles
+      articles,
+      countDown,
+      intervalId,
+      prize,
+      roundId
+    }
+  },
+  async mounted(){
+    const endRound = await getCountDown(this.$config.privKey)
+    this.intervalId = setInterval(() => {this.formattedCountDown(endRound)}, 1000);
+    this.prize = await getPrize(this.$config.privKey);
+    this.roundId = await getRound(this.$config.privKey)
+  },
+  beforeDestroy() {
+    clearInterval(this.intervalId)
+  },
+  methods: {
+    formattedCountDown(end) {
+      const n = moment().unix();
+      const diff = end - n;
+      const countdown = moment.duration(diff, 'seconds')
+      this.countDown.days = countdown.days();
+      this.countDown.hours = countdown.hours();
+      this.countDown.minutes = countdown.minutes();
+      this.countDown.seconds = countdown.seconds();
     }
   }
 }

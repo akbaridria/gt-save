@@ -13,28 +13,40 @@
             <DropdownMenu />
           </div>
       </div>
-       
+
         <div class="flex gap-3">
-          <DropdownChains />
-          <div class="border-[1px] border-netral-300 p-[0.4375rem] rounded-lg flex gap-2 items-center">
+          <DropdownChains v-show="isConnected" @changeNetwork="$emit('changeNetwork', $event)" />
+          <div v-if="!isConnected" class="border-[1px] border-netral-300 p-[0.4375rem] rounded-lg flex gap-2 items-center cursor-pointer hover:bg-netral-600">
             <div><LogosMetamask /></div>
-            <div class="flex gap-2">Connect <span class="hidden xl:block md:block lg:block">Wallet</span></div>
+            <div  @click="$emit('connect')" class="flex gap-2">Connect <span class="hidden xl:block md:block lg:block">Wallet</span></div>
+          </div>
+          <div class="flex items-center gap-2 border border-netral-300 p-[0.4375rem] rounded-lg hover:bg-netral-600 cursor-pointer" v-else>
+            <div class="w-5 h-5 rounded-full bg-netral-100"></div>
+            <div>{{ $store.state.userAddress.slice(0,5) + '...' + $store.state.userAddress.slice(-3) }}</div>
           </div>
         </div>
       </div>
   </div>
+
 </div>
   
 </template>
-
+  
 <script>
 const listChains = require('../data/chains.json');
 
 export default {
   data(){
+    const isConnected = this.$store.state.isConnected
     return {
-      listChains
+      listChains,
+      isConnected
     }
+  },
+  watch: {
+    '$store.state.isConnected': function() {
+      this.isConnected = this.$store.state.isConnected
+    },
   }
 }
 </script>
