@@ -3,9 +3,9 @@
   <div class="fixed inset-0 bg-netral-600 bg-opacity-75 transition-opacity"></div>
 
   <div class="fixed inset-0 z-[10000] overflow-y-auto">
-    <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-      <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:w-full sm:my-8 sm:w-full sm:max-w-lg">
-        <div class="bg-netral-500 px-4 pb-4 pt-5 sm:p-6 sm:pb-4 grid gap-4">
+    <div class="flex min-h-full items-end justify-center p-4 text-center items-center p-0">
+      <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all w-full my-8 w-full max-w-md">
+        <div class="bg-netral-500 px-4 pb-4 pt-5 p-6 pb-4 grid gap-4">
          <template v-if="!isFinish">
            <div class="flex justify-between text-lg items-center">
               <div>Confirm Deposit</div>

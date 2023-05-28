@@ -218,3 +218,63 @@ export const depositOthers = async (chain, amount, amountGas) => {
   );
   return tx;
 };
+
+export const getFeeAxelarTwoWay = async (chain) => {
+  if (chain[0].name === "filecoin") {
+    return ethers.utils.parseUnits("2");
+  } else {
+    const api = new AxelarQueryAPI({ environment: Environment.TESTNET });
+    const gasFee = await api.estimateGasFee(
+      EvmChain[chain[0].fee],
+      EvmChain["POLYGON"],
+      GasToken[chain[0].symbol],
+      1000000,
+      2
+    );
+
+    const feeBack = await api.estimateGasFee(
+      EvmChain["POLYGON"],
+      EvmChain[chain[0].fee],
+      GasToken[chain[0].symbol],
+      1000000,
+      2
+    );
+    return ethers.utils.formatUnits(
+      ethers.BigNumber.from(gasFee).add(ethers.BigNumber.from(feeBack)),
+      18
+    );
+  }
+};
+
+export const withdrawOnPolygon = async (amount) => {
+  const polygon = chains.filter((item) => item.name === "Polygon");
+  const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+  const signerPol = provider.getSigner();
+  const gtsave = new ethers.Contract(
+    polygon[0].contractAddress,
+    gtSaveContract.abi,
+    signerPol
+  );
+  const tx = await gtsave.withdraw(amount, { gasLimit: 500000 });
+  return tx;
+};
+
+export const withdrawOthers = async (chain, amount, amountGas) => {
+  const polygon = chains.filter((item) => item.name === "Polygon");
+  const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+  const signerPol = provider.getSigner();
+  const gtsaveConnector = new ethers.Contract(
+    chain[0].contractAddress,
+    gtSaveConnector.abi,
+    signerPol
+  );
+  const tx = await gtsaveConnector.requestWithdraw(
+    amount,
+    polygon[0].contractAddress,
+    {
+      value: amountGas,
+      gasLimit: 500000,
+    }
+  );
+  return tx;
+};

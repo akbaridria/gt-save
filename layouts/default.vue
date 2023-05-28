@@ -3,6 +3,7 @@
     <img src="images/light.png" class="absolute z-[50] top-0 right-0" alt="">
     <Header @connect="connectWallet($event)" @changeNetwork="switchWallet($event)" />
     <ModalDeposit v-if="openModal" @closeModal="openModal = false" :amount="amountDeposit" />
+    <ModalAccount v-if="openModalAccount" @closeModal="openModalAccount = false" :balance="userBalance" />
     <div class="container px-4 min-h-screen mx-auto relative">
       <div>
         <Nuxt />
@@ -20,9 +21,13 @@ export default {
   data() {
     const openModal = false
     const amountDeposit = 0
+    const openModalAccount = false
+    const userBalance = 0
     return {
       openModal,
-      amountDeposit
+      amountDeposit,
+      openModalAccount,
+      userBalance
     }
   },
   async mounted(){
@@ -45,16 +50,21 @@ export default {
   created() {
     this.$nuxt.$on('connectWallet', ($event) => this.connectWallet($event))
     this.$nuxt.$on('showModal', ($event) => this.showModal($event))
+    this.$nuxt.$on('showModalAccount', ($event) => this.showModalAccount($event))
   },
   beforeDestroy() {
     this.$nuxt.$off('connectWallet', ($event) => this.connectWallet($event))
     this.$nuxt.$off('showModal', ($event) =>  this.showModal($event))
+    this.$nuxt.$off('showModalAccount', ($event) => this.showModalAccount($event))
   },
   methods: {
     showModal(amount) {
-      console.log(amount)
       this.amountDeposit = amount
       this.openModal = !this.openModal
+    },
+    showModalAccount(amount) {
+      this.userBalance = amount
+      this.openModalAccount = true
     },
     async initWallet() {
       if(window.ethereum) {

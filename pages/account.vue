@@ -9,13 +9,13 @@
 
     <div v-else class="grid lg:grid-cols-2 xl:grid-cols-2 gap-4">
       <div class="flex flex-col gap-4">
-        <div class="border border-netral-300 p-[1.5rem] flex justify-between rounded">
+        <div @click="$nuxt.$emit('showModalAccount', userData.balance)" class="border border-netral-300 p-[1.5rem] cursor-pointer flex justify-between rounded">
             <div>
               <div class="opacity-50">Your Account</div>
               <div class="text-lg line-clamp-1">{{ userData.user.slice(0, 5) + '...' + userData.user.slice(-3) }}</div>
             </div>
-            <div class="flex items-center text-xl">
-              <div>${{ userData.balance }}</div>
+            <div class="flex items-center gap-4 text-xl">
+              <div class="flex gap-2 items-center">$ <span v-if="!loading.all || !loading.balance">{{ userData.balance }}</span><span v-else><IconsLoadingCircle :size="16" class="animate-spin" /></span></div>
               <ion-icon name="chevron-forward-outline"></ion-icon>
             </div>
         </div>
@@ -25,7 +25,7 @@
             <div><DropdownUserActivity @selectValue="getUserActivity($event)" /></div>
           </div>
           <hr class="border-t border-netral-300">
-          <div v-if="!loading.activity" class="flex flex-col gap-3">
+          <div v-if="!loading.all || !loading.activity" class="flex flex-col gap-3">
             <a v-for="(item, index) in userData.activity" :key="index" :href="item.txHash" target="_blank" class="grid grid-cols-[1fr_1fr_1fr_50px]  lg:grid-cols-[1fr_1fr_1fr_1fr_50px] xl:grid-cols-[1fr_1fr_1fr_1fr_50px] gap-4">
                 <div>{{ item.blockId }}</div>
                 <div class="hidden xl:block lg:block md:block">{{ item.date }}</div>
@@ -77,7 +77,9 @@ export default {
       activity: []
     }
     const loading = {
-      activity: false
+      activity: true,
+      balance: true,
+      all: true
     }
     const urlExplorer = 'https://mumbai.polygonscan.com/tx/'
     return {
@@ -102,15 +104,19 @@ export default {
   },
   async mounted(){
     if(this.$store.state.userAddress){
+      this.loading.all = true
       await this.getDetailUser()
       await this.getUserActivity({ name: 'Deposit'});
+      this.loading.all = false
     }
   },
   methods: {
     async getDetailUser() {
+      this.loading.balance = true
       const data = await getUserData(this.$config.privKey, this.$store.state.userAddress)
-      this.userData.balance = Intl.NumberFormat().format(ethers.BigNumber.from(data.balance).toNumber() / 1e6)
+      this.userData.balance = ethers.utils.formatUnits(ethers.BigNumber.from(data.balance), '6')
       this.userData.listWin = data.listWin
+      this.loading.balance = false
     },
     async getUserActivity(category){
       const listCategory = {
@@ -141,11 +147,11 @@ export default {
           data[i].raw_log_data
         )
         this.userData.activity.push({
-          blockId: data[i].block_height,
+          blockId: '#' + data[i].block_height,
           date: moment(data[i].block_signed_at).format('LL'),
           category: category,
           amount: ethers.utils.formatUnits(e[2], 6),
-          txHash : this.urlExplorer + data[0].tx_hash
+          txHash : this.urlExplorer + data[i].tx_hash
         })
       }
     }
