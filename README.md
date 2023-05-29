@@ -3,6 +3,9 @@
 ## Description
 GTSave is a decentralized savings protocol built on the powerful combination of Axelar GMP and Chainlink VRF. It empowers users to save and earn rewards by participating in fair and transparent drawings on the platform. GTSave integrates with various blockchain networks, providing a secure and exciting experience for users.
 
+## Project Website
+Visit our [website](https://gtsave.web.app) to learn more about GTSave and explore the platform.
+
 ## Underlying Technology
 GTSave leverages the following cutting-edge technologies:
 
