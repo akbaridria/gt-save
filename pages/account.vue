@@ -47,15 +47,19 @@
         </div>
         <div class="flex justify-between">
           <div class="opacity-50">Your Prize</div>
-          <div class="text-2xl">$556</div>
+          <div class="text-2xl">${{ totalPrizes }}</div>
         </div>
         <hr class="border-t border-netral-300">
         <div class="flex flex-col gap-4">
-          <div class="flex justify-between">
-            <div>Draw #100001</div>
-            <div class="hidden xl:block lg:block md:block">19 May 2023</div>
-            <div>$149</div>
-            <div>Claim</div>
+          <div v-for="(item, index) in userData.listWin" :key="index" class="grid grid-cols-3">
+            <div>#{{ item.roundId }}</div>
+            <div>${{ item.prize }}</div>
+            <div class="flex justify-end">
+              <div v-if="item.isClaimed">
+                Claimed
+              </div>
+              <button v-else @click="$nuxt.$emit('showModalClaim',item.prize, item.roundId)"  class="bg-primary-100 text-netral-500 rounded-lg py-[0.3rem] px-[0.6rem] hover:opacity-90 transition-all">Claim</button>
+            </div>
           </div>
         </div>
       </div>
@@ -82,11 +86,13 @@ export default {
       all: true
     }
     const urlExplorer = 'https://mumbai.polygonscan.com/tx/'
+    const totalPrizes = 0
     return {
       isConnect,
       userData,
       loading,
-      urlExplorer
+      urlExplorer,
+      totalPrizes
     }
   },
   watch: {
@@ -115,8 +121,35 @@ export default {
       this.loading.balance = true
       const data = await getUserData(this.$config.privKey, this.$store.state.userAddress)
       this.userData.balance = ethers.utils.formatUnits(ethers.BigNumber.from(data.balance), '6')
-      this.userData.listWin = data.listWin
+      this.formattedListWin(data.listWin)
       this.loading.balance = false
+    },
+    async formattedListWin(data) {
+      let total = ethers.BigNumber.from(0)
+      this.userData.listWin = []
+      const rawClaimedData = []
+      const f = await fetch(`https://api.covalenthq.com/v1/matic-mumbai/events/topics/0xb26d72f1f96f5b9982fb943039f9409789540297914dba2fdb53a3e488fd67d8/?starting-block=35894923&ending-block=latest&secondary-topics=${'0x000000000000000000000000' + this.$store.state.userAddress.slice(2)}&key=${this.$config.cKey}`, {method: 'GET'})
+      const d = await f.json();
+      console.log(data.length);
+      for(let i = 0; i < d.data.items.length; i++) {
+        const e = ethers.utils.defaultAbiCoder.decode(
+          ['string', 'uint256', 'uint256'],
+          d.data.items[i].raw_log_data
+        )
+        rawClaimedData.push(e[1].toString())
+      } 
+      for(let i = 0; i < data.length; i++) {
+        const prize = ethers.utils.formatUnits(data[i].prize, '6')
+        const roundId = data[i].roundId.toString()
+        const isClaimed = rawClaimedData.includes(roundId)
+        total = total.add(data[i].prize);
+        this.userData.listWin = [...this.userData.listWin, {
+          prize: prize,
+          roundId: roundId,
+          isClaimed: isClaimed
+        }]
+      }
+      this.totalPrizes = ethers.utils.formatUnits(total, '6')
     },
     async getUserActivity(category){
       const listCategory = {
@@ -127,7 +160,7 @@ export default {
           topic: '0xf0ccc01369b7fa379493616626b8963509d65cb00db21bcea3e2ef62b99ee029'
         },
         Claim: {
-          topic: ''
+          topic: '0xb26d72f1f96f5b9982fb943039f9409789540297914dba2fdb53a3e488fd67d8'
         }
       }
       this.loading.activity = true

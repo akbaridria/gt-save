@@ -40,7 +40,7 @@
             <div>Balance: ${{ balance }} <span @click="amountWithdraw = balance" class="cursor-pointer underline">Max</span></div>
             <hr class="border-t border-netral-300">
             <div v-if="selectedChain[0].name !== 'Polygon'" class="flex justify-between items-center text-sm">
-              <div>Axelar Fee</div>
+              <div>Axelar Fee (est)</div>
               <div class="flex gap-2 items-center"><span v-if="loading.fee"><IconsLoadingCircle :size="16" class="animate-spin" /></span><span v-else>{{ fee.axelarFee }}</span> {{ selectedChain[0].detail.nativeCurrency.symbol }}</div>
             </div>
             <div class="flex justify-between">
@@ -63,7 +63,7 @@
               </div>
             </div>
             <hr class="border-t border-netral-300">
-            <button @click="error.isError ? null: requestWithdraw()" :class="{'pointer-events-none text-[#5F5F5F] bg-[#3D3D3D]': loading.fee || error.isError || loading.withdraw}" class="bg-primary-100 text-netral-500 hover:opacity-90 flex gap-2 justify-center items-center  p-[0.6rem] rounded-lg">
+            <button @click="error.isError ? null: requestWithdraw()" :class="loading.fee || error.isError || loading.withdraw ? 'pointer-events-none text-[#5F5F5F] bg-[#3D3D3D]' : 'bg-primary-100 text-netral-500'" class="hover:opacity-90 flex gap-2 justify-center items-center  p-[0.6rem] rounded-lg">
               <IconsLoadingCircle v-if="loading.fee || loading.withdraw" :size="20" class="animate-spin" />
               {{ error.isError ? error.message : 'Withdraw' }}
             </button>

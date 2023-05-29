@@ -39,8 +39,10 @@
         <div class="grid items-center">
           <input class="bg-transparent outline-0 text-center text-[2rem] lg:text-[3rem] xl:text-[4rem] w-full" pattern="^[0-9]*[.,]?[0-9]*$" placeholder="0.0" type="number" inputmode="decimal" min="0" v-model="amountDeposit">
         </div>
-        <div>
-          Balance: {{ usdcBalance }} 
+        <div class="flex justify-center items-center gap-2">
+          <span class="flex gap-2 items-center justify-center">
+            Balance: <span v-if="loading"><IconsLoadingCircle class="animate-spin" :size="16" /></span><span v-else>{{ usdcBalance }} </span>
+          </span>
           <span @click="amountDeposit = usdcBalance" class="underline cursor-pointer">Max</span>
         </div>
         <div class="flex justify-center cursor-pointer ">
@@ -58,19 +60,21 @@
       <div class="flex flex-col gap-4">
         <div class="border border-netral-300 rounded p-[1.5rem] text-lg flex justify-between items-center max-w-full">
           <div class="flex gap-3"> <IconsDollar /> Total Deposit</div>
-          <div class="font-bold">${{ totalDeposit }}</div>
+          <div class="font-bold flex gap-2 items-center">
+            $ <span v-if="loading"><IconsLoadingCircle class="animate-spin" :size="16" /></span> <span v-else>{{ totalDeposit }}</span>
+          </div>
         </div>
         <div class="border border-netral-300 rounded p-[1.5rem] flex flex-col max-w-full">
           <div class="text-lg">Draw History</div>
           <hr class="border-t-[1px] border-netral-300 my-3" />
           <div v-if="listWinners.length > 0">
-            <div class="flex justify-between">
-              <div>Draw #100001</div>
-              <div class="hidden xl:block lg:block md:block">May 19 2023</div>
-              <div>0x694...294</div>
-              <div>$149</div>
+            <a v-for="(item, index) in listWinners" :key="index" :href="item.txHash" target="_blank" class="grid lg:grid-cols-[1fr_1fr_1fr_1fr_30px] xl:grid-cols-[1fr_1fr_1fr_1fr_30px] grid-cols-[1fr_1fr_1fr_30px]">
+              <div>#{{item.roundId }}</div>
+              <div class="hidden xl:block lg:block md:block">{{ item.date }}</div>
+              <div>{{ item.winner }}</div>
+              <div>${{ item.amount }}</div>
               <IconsExternalLink :size="24" />
-            </div>
+            </a>
           </div>
           <div v-else>
             <div>No winners yet.</div>
@@ -107,6 +111,8 @@ export default {
       message: ''
     }
     const isConnect = this.$store.state.isConnected
+    const loading = true
+    const urlExplorer = 'https://mumbai.polygonscan.com/tx/'
     return {
       amountDeposit,
       countDown,
@@ -116,7 +122,9 @@ export default {
       usdcBalance,
       chains,
       detailError,
-      isConnect
+      isConnect,
+      loading,
+      urlExplorer
     }
   },
   watch: {
@@ -155,11 +163,13 @@ export default {
     }
   },
   async mounted(){
+    this.loading = true
     const endRound = await getCountDown(this.$config.privKey)
     this.totalDeposit = await getTotalDeposit(this.$config.privKey)
     this.intervalId = setInterval(() => {this.formattedCountDown(endRound)}, 1000)
     await this.getListWinners()
     await this.getBalance()
+    this.loading = false
   },
   beforeDestroy() {
     clearInterval(this.intervalId)
@@ -174,13 +184,30 @@ export default {
       this.countDown.minutes = countdown.minutes();
       this.countDown.seconds = countdown.seconds();
     },
-    getListWinners(){
+    async getListWinners(){
       const topic = '0x712f8f97b2d374168ccc696af73af8177e1cd3e052cd391ef8a50136ec2c9d83';
-      fetch(`https://api.covalenthq.com/v1/matic-mumbai/events/topics/${topic}/?starting-block=35894923&ending-block=latest&key=${this.$config.cKey}`, {method: 'GET'})
+      await fetch(`https://api.covalenthq.com/v1/matic-mumbai/events/topics/${topic}/?starting-block=35894923&ending-block=latest&key=${this.$config.cKey}`, {method: 'GET'})
         .then((resp) => resp.json())
         .then((data) => {
+          console.log(data)
           this.listWinners = data.data.items
+          this.formattedListWinner(data.data.items)
         });
+    },
+    formattedListWinner(data) {
+      this.listWinners = []
+      for(let i = 0; i <  data.length; i++) {
+        const address = ethers.utils.defaultAbiCoder.decode(['address'], data[i].raw_log_topics[1])
+        const roundId = ethers.utils.defaultAbiCoder.decode(['uint256'], data[i].raw_log_topics[2])
+        const amount = ethers.utils.defaultAbiCoder.decode(['uint256'], data[i].raw_log_data)
+        this.listWinners.push({
+          roundId: roundId[0],
+          date: moment(data[i].block_signed_at).format('LL'),
+          winner: address[0].slice(0,5) + '...' + address[0].slice(-3),
+          amount: ethers.utils.formatUnits(amount[0], '6'),
+          txHash: this.urlExplorer + data[i].tx_hash
+        })
+      }
     },
     async getBalance() {
       const chain = listChains.filter(item => item.chainId === this.$store.state.chainId)

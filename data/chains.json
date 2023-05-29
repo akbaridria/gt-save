@@ -22,7 +22,7 @@
       "nativeCurrency": { "name": "MATIC", "decimals": 18, "symbol": "MATIC" },
       "rpcUrls": ["https://polygon-rpc.com/"]
     },
-    "fee": "POLYGON",
+    "fee": "polygon",
     "symbol": "MATIC"
   },
   {
@@ -41,7 +41,7 @@
       "nativeCurrency": { "name": "AVAX", "decimals": 18, "symbol": "AVAX" },
       "rpcUrls": ["https://api.avax-test.network/ext/bc/C/rpc"]
     },
-    "fee": "AVALANCHE",
+    "fee": "avalanche",
     "symbol": "AVAX"
   },
   {
@@ -60,8 +60,8 @@
       "nativeCurrency": { "name": "BNB", "decimals": 18, "symbol": "BNB" },
       "rpcUrls": ["https://bsc-testnet.public.blastapi.io"]
     },
-    "fee": "BINANCE",
-    "symbol": "BINANCE"
+    "fee": "binance",
+    "symbol": "BNB"
   },
   {
     "name": "Fantom",
@@ -79,7 +79,7 @@
       "nativeCurrency": { "name": "FTM", "decimals": 18, "symbol": "FTM" },
       "rpcUrls": ["https://rpc.testnet.fantom.network"]
     },
-    "fee": "FANTOM",
+    "fee": "fantom",
     "symbol": "FTM"
   },
   {
@@ -98,8 +98,8 @@
       "nativeCurrency": { "name": "DEV", "decimals": 18, "symbol": "DEV" },
       "rpcUrls": ["https://rpc.api.moonbase.moonbeam.network"]
     },
-    "fee": "MOONBEAM",
-    "symbol": "GLMR"
+    "fee": "moonbeam",
+    "symbol": "DEV"
   },
   {
     "name": "aurora",
@@ -117,8 +117,8 @@
       "nativeCurrency": { "name": "ETH", "decimals": 18, "symbol": "ETH" },
       "rpcUrls": ["https://testnet.aurora.dev"]
     },
-    "fee": "AURORA",
-    "symbol": "AURORA"
+    "fee": "aurora",
+    "symbol": "aETH"
   },
   {
     "name": "celo",
@@ -136,7 +136,7 @@
       "nativeCurrency": { "name": "CELO", "decimals": 18, "symbol": "CELO" },
       "rpcUrls": ["https://alfajores-forno.celo-testnet.org"]
     },
-    "fee": "CELO",
+    "fee": "celo",
     "symbol": "CELO"
   },
   {
@@ -155,7 +155,7 @@
       "nativeCurrency": { "name": "AGOR", "decimals": 18, "symbol": "AGOR" },
       "rpcUrls": ["https://goerli-rollup.arbitrum.io/rpc"]
     },
-    "fee": "ARBITRUM",
+    "fee": "arbitrum",
     "symbol": "ETH"
   },
   {
@@ -174,7 +174,7 @@
       "nativeCurrency": { "name": "ETH", "decimals": 18, "symbol": "ETH" },
       "rpcUrls": ["https://goerli.optimism.io"]
     },
-    "fee": "ARBITRUM",
+    "fee": "optimism",
     "symbol": "ETH"
   },
   {
@@ -193,8 +193,8 @@
       "nativeCurrency": { "name": "ETH", "decimals": 18, "symbol": "ETH" },
       "rpcUrls": ["https://goerli.base.org"]
     },
-    "fee": "BASE",
-    "symbol": "BASE"
+    "fee": "base",
+    "symbol": "ETH"
   },
   {
     "name": "filecoin",
@@ -211,7 +211,9 @@
       "chainId": "0xc45",
       "nativeCurrency": { "name": "tFIL", "decimals": 18, "symbol": "tFIL" },
       "rpcUrls": ["https://api.hyperspace.node.glif.io/rpc/v1"]
-    }
+    },
+    "fee": "filecoin",
+    "symbol": "FIL"
   },
   {
     "name": "ethereum-2",
@@ -229,7 +231,7 @@
       "nativeCurrency": { "name": "ETH", "decimals": 18, "symbol": "ETH" },
       "rpcUrls": ["https://rpc.goerli.eth.gateway.fm"]
     },
-    "fee": "ETHEREUM",
+    "fee": "ethereum-2",
     "symbol": "ETH"
   }
 ]
