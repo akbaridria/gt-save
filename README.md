@@ -1,69 +1,46 @@
-# gt-save
+# GTSave
 
-## Build Setup
+## Description
+GTSave is a decentralized savings protocol built on the powerful combination of Axelar GMP and Chainlink VRF. It empowers users to save and earn rewards by participating in fair and transparent drawings on the platform. GTSave integrates with various blockchain networks, providing a secure and exciting experience for users.
 
-```bash
-# install dependencies
-$ npm install
+## Underlying Technology
+GTSave leverages the following cutting-edge technologies:
 
-# serve with hot reload at localhost:3000
-$ npm run dev
+- **Axelar GMP (Global Messaging Protocol):** A decentralized cross-chain communication protocol that enables seamless interoperability between different blockchain networks.
+- **Chainlink VRF (Verifiable Random Function):** A secure and verifiable source of randomness used for ensuring fairness and transparency in various smart contract applications.
 
-# build for production and launch server
-$ npm run build
-$ npm run start
+## Supported Networks and Contract Addresses
 
-# generate static project
-$ npm run generate
-```
-
-For detailed explanation on how things work, check out the [documentation](https://nuxtjs.org).
-
-## Special Directories
-
-You can create the following extra directories, some of which have special behaviors. Only `pages` is required; you can delete them if you don't want to use their functionality.
-
-### `assets`
-
-The assets directory contains your uncompiled assets such as Stylus or Sass files, images, or fonts.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/assets).
-
-### `components`
-
-The components directory contains your Vue.js components. Components make up the different parts of your page and can be reused and imported into your pages, layouts and even other components.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/components).
-
-### `layouts`
-
-Layouts are a great help when you want to change the look and feel of your Nuxt app, whether you want to include a sidebar or have distinct layouts for mobile and desktop.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/layouts).
+| Network      | Contract Address                                    |
+|--------------|-----------------------------------------------------|
+| Polygon      | 0x283ABc5B3544c4c3Dd5F17898777Da8b519fD0aE          |
+| Avalanche    | 0xB00191b365784f74fc23Dd4C46B503d6063D1570          |
+| BSC          | 0x0a3B94b93395095204aa5c09330eC1b38bc4EE77          |
+| Fantom       | 0xBEEC84181eC923C0D700DFBCF923b9867cba98D0          |
+| Moonbeam     | 0xECf71718B5fEF085cC29F87045b03411c6E1707C          |
+| Aurora       | 0x12aaA99572B037b893Cb37D06d42c28a87AaAC37          |
+| Celo         | 0x2aF20b65859513B08f932F514f9df8D0D7141f7E          |
+| Arbitrum     | 0x0cC17bB27A6ecaa973EbcB45c1d355e70284008a          |
+| Optimism     | 0x0C24805507556313f0C3633558fc5e5A9dAE1d36          |
+| Base         | 0xfBf8C14e57EFce2cDafd4a9c30930310ABeb4aB6          |
+| Filecoin     | 0x12aaA99572B037b893Cb37D06d42c28a87AaAC37          |
+| Ethereum     | 0x810A7A8C6F005d0d043c9504d9E773CAB0dF22F8          |
 
 
-### `pages`
+## Roadmap
 
-This directory contains your application views and routes. Nuxt will read all the `*.vue` files inside this directory and setup Vue Router automatically.
+### Phase 1: EVM on Testnet Development
+In this phase, we will focus on developing and testing the Ethereum Virtual Machine (EVM) integration on the testnet. This will involve building the necessary infrastructure and smart contracts to enable secure and efficient savings operations.
 
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/get-started/routing).
+### Phase 2: Cosmos Chain Integration
+The second phase of development will revolve around integrating GTSave with the Cosmos blockchain. By leveraging the power of the Cosmos ecosystem, we aim to enhance cross-chain interoperability and expand the platform's capabilities.
 
-### `plugins`
+### Phase 3: Mainnet Launch
+The final phase of development will culminate in the launch of GTSave on the mainnet. Users will be able to securely save and earn rewards by participating in exciting and fair drawings on multiple supported networks, enjoying the benefits of decentralization and transparency.
 
-The plugins directory contains JavaScript plugins that you want to run before instantiating the root Vue.js Application. This is the place to add Vue plugins and to inject functions or constants. Every time you need to use `Vue.use()`, you should create a file in `plugins/` and add its path to plugins in `nuxt.config.js`.
+We are committed to continuous improvement and will regularly update the roadmap to incorporate new features, network integrations, and community feedback.
 
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/plugins).
+Thank you for choosing GTSave! Feel free to reach out to us if you have any questions or suggestions.
 
-### `static`
-
-This directory contains your static files. Each file inside this directory is mapped to `/`.
-
-Example: `/static/robots.txt` is mapped as `/robots.txt`.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/static).
-
-### `store`
-
-This directory contains your Vuex store files. Creating a file in this directory automatically activates Vuex.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/store).
+## License
+This project is licensed under the [MIT License](LICENSE).
