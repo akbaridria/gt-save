@@ -12,7 +12,7 @@ GTSave leverages the following cutting-edge technologies:
 - **Axelar GMP (Global Messaging Protocol):** A decentralized cross-chain communication protocol that enables seamless interoperability between different blockchain networks.
 - **Chainlink VRF (Verifiable Random Function):** A secure and verifiable source of randomness used for ensuring fairness and transparency in various smart contract applications.
 
-## Supported Networks and Contract Addresses
+## Supported Networks (testnet) and Contract Addresses
 
 | Network      | Contract Address                                    |
 |--------------|-----------------------------------------------------|
