@@ -29,6 +29,8 @@ GTSave leverages the following cutting-edge technologies:
 | Filecoin     | 0x12aaA99572B037b893Cb37D06d42c28a87AaAC37          |
 | Ethereum     | 0x810A7A8C6F005d0d043c9504d9E773CAB0dF22F8          |
 
+## Yield Source
+GTSave utilizes Aave V3 on Polygon as the yield source for generating rewards. Aave V3 provides a robust and secure lending and borrowing protocol, ensuring efficient capital utilization and generating interest for GTSave users.
 
 ## Roadmap
 

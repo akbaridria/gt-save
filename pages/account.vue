@@ -118,11 +118,17 @@ export default {
   },
   methods: {
     async getDetailUser() {
-      this.loading.balance = true
-      const data = await getUserData(this.$config.privKey, this.$store.state.userAddress)
-      this.userData.balance = ethers.utils.formatUnits(ethers.BigNumber.from(data.balance), '6')
-      this.formattedListWin(data.listWin)
-      this.loading.balance = false
+      try {
+        this.loading.balance = true
+        const data = await getUserData(this.$config.privKey, this.$store.state.userAddress)
+        this.userData.balance = ethers.utils.formatUnits(ethers.BigNumber.from(data.balance), '6')
+        this.formattedListWin(data.listWin)
+        this.loading.balance = false
+      } catch (error) {
+        this.userData.balance = 0
+        this.loading.balance = false
+      }
+      
     },
     async formattedListWin(data) {
       let total = ethers.BigNumber.from(0)

@@ -157,7 +157,7 @@ export default {
         if(newV === 0) {
           this.error.isError = true
           this.error.message = 'Withdraw'
-        } else if(ethers.utils.parseUnits(this.balance, '6').gte(ethers.utils.parseUnits(newV, '6'))) {
+        } else if(ethers.utils.parseUnits(`${this.balance}`, '6').gte(ethers.utils.parseUnits(`${newV}`, '6'))) {
           this.error.isError = false,
           this.error.message = ''
         } else {
