@@ -8,7 +8,8 @@
     "start": "nuxt start",
     "generate": "nuxt generate",
     "contract:compile": "npx hardhat compile",
-    "contract-main:deploy": "npx hardhat run --network Polygon scripts/deploy.js"
+    "contract-main:deploy": "npx hardhat run --network Polygon scripts/deploy.js",
+    "firebase:deploy": "nuxt generate && firebase deploy --only hosting"
   },
   "dependencies": {
     "@aave/core-v3": "^1.17.2",

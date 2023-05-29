@@ -56,6 +56,9 @@
             {{ detailError.message }}
           </div>
         </div>
+        <div class="text-sm text-red-600">
+            Because of lack of liquidity, the amount that you can deposit maximum is 5 (a)USDC
+        </div>
       </div>
       <div class="flex flex-col gap-4">
         <div class="border border-netral-300 rounded p-[1.5rem] text-lg flex justify-between items-center max-w-full">
@@ -146,7 +149,11 @@ export default {
       this.isConnect = newV
     },
     amountDeposit(newV) {
-      if(this.usdcBalance < newV) {
+      if(newV > 5) {
+        this.detailError.error = true
+        this.detailError.message = 'Max. 5 (a)USDC'
+      }
+      else if(this.usdcBalance < newV) {
         this.detailError.error = true;
         this.detailError.message = 'Insufficient balance'
       } else {
@@ -189,7 +196,6 @@ export default {
       await fetch(`https://api.covalenthq.com/v1/matic-mumbai/events/topics/${topic}/?starting-block=35894923&ending-block=latest&key=${this.$config.cKey}`, {method: 'GET'})
         .then((resp) => resp.json())
         .then((data) => {
-          console.log(data)
           this.listWinners = data.data.items
           this.formattedListWinner(data.data.items)
         });
@@ -213,7 +219,6 @@ export default {
       const chain = listChains.filter(item => item.chainId === this.$store.state.chainId)
       if(chain.length > 0) {
         this.usdcBalance = await getUsdcBalance(this.$store.state.userAddress, chain)
-        console.log(this.usdcBalance)
       } else {
         this.usdcBalance = 0
       }

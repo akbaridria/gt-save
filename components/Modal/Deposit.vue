@@ -156,7 +156,6 @@ export default {
       this.loading = true
       const d = await checkAllowance(this.selectedChain)
       this.isApprove = d >= this.amount * 1e6
-      console.log(d, this.amount * 1e6)
       if(this.isApprove) {
         if(this.selectedChain[0].name !== 'Polygon') {
           this.loadingFee = true

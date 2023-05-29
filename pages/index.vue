@@ -16,9 +16,9 @@
         <div class="bg-primary-100 rounded-xl px-[1.25rem] py-[0.875rem] text-netral-500">
           Deposit Now
         </div>
-        <div class="flex gap-2">
+        <a href="https://github.com/akbaridria/gt-save#readme" target="_blank" class="flex gap-2">
           Learn More <IconsExternalLink />
-        </div>
+        </a>
       </div>
     </section>
 

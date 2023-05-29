@@ -165,9 +165,9 @@ export const axelarDepositFee = async (chain) => {
   } else {
     const api = new AxelarQueryAPI({ environment: Environment.TESTNET });
     const gasFee = await api.estimateGasFee(
-      EvmChain[chain[0].fee],
+      chain[0].fee,
       EvmChain["POLYGON"],
-      GasToken[chain[0].symbol],
+      chain[0].symbol,
       1000000,
       1.5
     );

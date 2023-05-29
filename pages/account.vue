@@ -130,7 +130,6 @@ export default {
       const rawClaimedData = []
       const f = await fetch(`https://api.covalenthq.com/v1/matic-mumbai/events/topics/0xb26d72f1f96f5b9982fb943039f9409789540297914dba2fdb53a3e488fd67d8/?starting-block=35894923&ending-block=latest&secondary-topics=${'0x000000000000000000000000' + this.$store.state.userAddress.slice(2)}&key=${this.$config.cKey}`, {method: 'GET'})
       const d = await f.json();
-      console.log(data.length);
       for(let i = 0; i < d.data.items.length; i++) {
         const e = ethers.utils.defaultAbiCoder.decode(
           ['string', 'uint256', 'uint256'],
