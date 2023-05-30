@@ -57,7 +57,7 @@
           </div>
         </div>
         <div class="text-sm text-red-600">
-            Because of lack of liquidity, the amount that you can deposit maximum is 5 (a)USDC
+            Because of lack of liquidity in testnet, <br> the amount that you can deposit maximum is 5 (a)USDC
         </div>
       </div>
       <div class="flex flex-col gap-4">

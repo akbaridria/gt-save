@@ -2,8 +2,24 @@
 
 @tailwind base;
 @tailwind components;
+.tooltip {
+  @apply invisible absolute;
+}
+
+.has-tooltip:hover .tooltip {
+  @apply visible z-50;
+}
 @tailwind utilities;
 
+@font-face {
+  font-family: 'PP Mori';
+  src: url('../../static//PPMori.otf');
+}
+
+@font-face {
+  font-family: 'Zin Display';
+  src: url('../../static/Zin Display.otf');
+}
 
 .nuxt-link-exact-active {
   opacity: 1 !important;
@@ -11,10 +27,10 @@
 
 @layer base {
   html {
-    font-family: 'Sintony', sans-serif;
+    font-family: 'PP Mori', sans-serif;
   }
   .logo-font {
-    font-family: 'Delicious Handrawn', cursive;
+    font-family: 'Zin Display', sans-serif;
   }
   input[type="number"]::-webkit-inner-spin-button,
   input[type="number"]::-webkit-outer-spin-button {

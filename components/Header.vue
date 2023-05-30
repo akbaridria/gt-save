@@ -22,9 +22,9 @@
             <div class="bg-red-600 rounded-lg text-white p-[0.25rem] text-sm">testnet</div>
           </div>
           <DropdownChains v-show="isConnected" @changeNetwork="$emit('changeNetwork', $event)" />
-          <div v-if="!isConnected" class="border-[1px] border-netral-300 p-[0.4375rem] rounded-lg flex gap-2 items-center cursor-pointer hover:bg-netral-600">
+          <div @click="$emit('connect')" v-if="!isConnected" class="border-[1px] border-netral-300 p-[0.4375rem] rounded-lg flex gap-2 items-center cursor-pointer hover:bg-netral-600">
             <div><LogosMetamask /></div>
-            <div  @click="$emit('connect')" class="flex gap-2">Connect <span class="hidden xl:block md:block lg:block">Wallet</span></div>
+            <div class="flex gap-2">Connect <span class="hidden xl:block md:block lg:block">Wallet</span></div>
           </div>
           <div class="flex items-center gap-2 border border-netral-300 p-[0.4375rem] rounded-lg hover:bg-netral-600 cursor-pointer" v-else>
             <div class="w-5 h-5 rounded-full bg-netral-100"></div>

@@ -40,7 +40,14 @@
             <div>Balance: ${{ balance }} <span @click="amountWithdraw = balance" class="cursor-pointer underline">Max</span></div>
             <hr class="border-t border-netral-300">
             <div v-if="selectedChain[0].name !== 'Polygon'" class="flex justify-between items-center text-sm">
-              <div>Axelar Fee (est)</div>
+              <div class="flex gap-2 items-center">Estimated Gas Fee 
+                <div class='has-tooltip'>
+                  <span class='tooltip rounded shadow-lg p-1 bg-netral-600 text-xs ml-5 -mt-8'>
+                    Estimated Fee for cross-chain message. <br> it is refundable when the actual gas that used is lower.
+                  </span>
+                  <ion-icon name="alert-circle-outline"></ion-icon>
+                </div>
+              </div>
               <div class="flex gap-2 items-center"><span v-if="loading.fee"><IconsLoadingCircle :size="16" class="animate-spin" /></span><span v-else>{{ fee.axelarFee }}</span> {{ selectedChain[0].detail.nativeCurrency.symbol }}</div>
             </div>
             <div class="flex justify-between">

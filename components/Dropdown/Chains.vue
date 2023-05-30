@@ -47,6 +47,8 @@ export default {
     }
   },
   mounted () {
+    const chain = listChains.filter(item => item.chainId === this.$store.state.chainId);
+    this.selectedChain = chain.length > 0 ? chain[0] : {logo: null, name: 'Unknown' }
     document.addEventListener('click', this.closeDropdown)
   },
   beforeDestroy () {

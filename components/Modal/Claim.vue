@@ -14,7 +14,14 @@
             <div class="text-[3.5rem]"> {{ prize }}</div>
             <hr class="border-t border-netral-300">
             <div v-if="selectedChain[0].name !== 'Polygon'" class="flex justify-between">
-              <div>Axelar Fee</div>
+              <div class="flex gap-2 items-center">Estimated Gas Fee 
+                <div class='has-tooltip'>
+                  <span class='tooltip rounded shadow-lg p-1 bg-netral-600 text-xs ml-5 -mt-8'>
+                    Estimated Fee for cross-chain message. <br> it is refundable when the actual gas that used is lower.
+                  </span>
+                  <ion-icon name="alert-circle-outline"></ion-icon>
+                </div>
+              </div>
               <div class="flex gap-2 items-center">
                 <div v-if="loading"><IconsLoadingCircle class="animate-spin" :size="18" /></div>
                 <div v-if="!loading">{{ axelarFee }}</div>
