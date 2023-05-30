@@ -1,7 +1,7 @@
 <template>
   <div>
     <section class="max-h-screen h-[900px] flex flex-col gap-10 justify-center relative z-10">
-      <video src="images/3d-coin.mp4" loop muted autoplay class="absolute top-0 z-0 max-h-screen h-[900px] w-full"/>
+      <video src="images/3d-coin.mp4" autoplay loop autobuffer muted playsinline class="absolute top-0 z-0 max-h-screen h-[900px] w-full"/>
       <div class="text-[3rem] lg:text-[7rem] md:text-[6rem] xl:text-[8rem] font-bold relative z-10">
         <div>SAVE</div>
         <div>TO WIN</div>
@@ -13,9 +13,9 @@
         </div>
       </div>
       <div class="flex items-center gap-4 relative">
-        <div class="bg-primary-100 rounded-xl px-[1.25rem] py-[0.875rem] text-netral-500">
+        <a href="/deposit" class="bg-primary-100 rounded-xl px-[1.25rem] py-[0.875rem] text-netral-500 hover:opacity-90 transition-all">
           Deposit Now
-        </div>
+        </a>
         <a href="https://github.com/akbaridria/gt-save#readme" target="_blank" class="flex gap-2">
           Learn More <IconsExternalLink />
         </a>
@@ -44,9 +44,9 @@
           <div class="text-[0.5rem] lg:text-[1.5rem] xl:text-[2rem]">Seconds</div>
         </div>
       </div>
-      <div class="bg-primary-100 rounded-xl px-[1.25rem] py-[0.875rem] text-netral-500">
+      <a href="/deposit" class="bg-primary-100 rounded-xl px-[1.25rem] py-[0.875rem] text-netral-500 hover:opacity-90 transition-all">
         Deposit Now
-      </div>
+      </a>
     </section>
 
     <section class="grid md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 border-t-2 border-netral-300 border-b-2">
