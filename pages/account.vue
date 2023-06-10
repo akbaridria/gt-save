@@ -58,7 +58,7 @@
               <div v-if="item.isClaimed">
                 Claimed
               </div>
-              <button v-else @click="$nuxt.$emit('showModalClaim',item.prize, item.roundId)"  class="bg-primary-100 text-netral-500 rounded-lg py-[0.3rem] px-[0.6rem] hover:opacity-90 transition-all">Claim</button>
+              <button v-else @click="$nuxt.$emit('showModalClaim',{ prize: item.prize, roundId: item.roundId})"  class="bg-primary-100 text-netral-500 rounded-lg py-[0.3rem] px-[0.6rem] hover:opacity-90 transition-all">Claim</button>
             </div>
           </div>
         </div>

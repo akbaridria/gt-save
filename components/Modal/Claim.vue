@@ -10,7 +10,7 @@
             <div class="flex justify-end">
               <ion-icon @click="$emit('closeModal')" class="text-lg cursor-pointer" name="close-outline"></ion-icon>
             </div>
-            <div>Claim</div>
+            <div>Claim #{{ roundId }}</div>
             <div class="text-[3.5rem]"> {{ prize }}</div>
             <hr class="border-t border-netral-300">
             <div v-if="selectedChain[0].name !== 'Polygon'" class="flex justify-between">
@@ -148,7 +148,7 @@ export default {
         }
         const receipt = await tx.wait();
         this.txHash = receipt.transactionHash
-        this.loading = loadingClaim
+        this.loadingClaim = false
         this.isFinish = true
       } catch (error) {
         this.loadingClaim = false

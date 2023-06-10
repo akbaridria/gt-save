@@ -67,9 +67,10 @@ export default {
     this.$nuxt.$off('showModalClaim', ($event) => this.showModalClaim($event))
   },
   methods: {
-    showModalClaim(amount, roundId) {
-      this.claimRoundId = roundId
-      this.userPrize = amount
+    showModalClaim(data) {
+      console.log(data)
+      this.claimRoundId = data.roundId
+      this.userPrize = data.prize
       this.openModalClaim = true
     },
     showModal(amount) {

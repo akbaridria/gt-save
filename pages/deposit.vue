@@ -57,7 +57,7 @@
           </div>
         </div>
         <div class="text-sm text-red-600">
-            Because of lack of liquidity in testnet, <br> the amount that you can deposit maximum is 5 (a)USDC
+            Because of lack of liquidity in testnet, <br> the amount that you can deposit maximum is 5 (a)USDC per transaction
         </div>
       </div>
       <div class="flex flex-col gap-4">
@@ -68,9 +68,17 @@
           </div>
         </div>
         <div class="border border-netral-300 rounded p-[1.5rem] flex flex-col max-w-full">
-          <div class="text-lg">Draw History</div>
+          <div  class="text-lg">Draw History</div>
           <hr class="border-t-[1px] border-netral-300 my-3" />
-          <div v-if="listWinners.length > 0">
+          <div class="grid lg:grid-cols-[1fr_1fr_1fr_1fr_30px] xl:grid-cols-[1fr_1fr_1fr_1fr_30px] grid-cols-[1fr_1fr_1fr_30px] font-bold">
+            <div>#Round Id</div>
+            <div class="hidden xl:block lg:block md:block">#Date</div>
+            <div>#Winner</div>
+            <div>#Prize</div>
+            <div></div>
+          </div>
+          <hr class="border-t-[1px] border-netral-300 my-3" />
+          <div class="flex flex-col gap-4" v-if="listWinners.length > 0">
             <a v-for="(item, index) in listWinners" :key="index" :href="item.txHash" target="_blank" class="grid lg:grid-cols-[1fr_1fr_1fr_1fr_30px] xl:grid-cols-[1fr_1fr_1fr_1fr_30px] grid-cols-[1fr_1fr_1fr_30px]">
               <div>#{{item.roundId }}</div>
               <div class="hidden xl:block lg:block md:block">{{ item.date }}</div>
