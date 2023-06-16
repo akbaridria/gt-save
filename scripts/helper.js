@@ -1,7 +1,7 @@
 const ethers = require("ethers");
 const gtSaveContract = require("../artifacts/contracts/gt-save/GTSave.sol/GTSave.json");
 const gtSaveConnector = require("../artifacts/contracts/gt-save/GTSaveConnector.sol/GTSaveConnector.json");
-const erc20 = require("../artifacts/@openzeppelin/contracts/token/ERC20/IERC20.sol/IERC20.json");
+const erc20 = require("../artifacts/contracts/interfaces/IERC20.sol/IERC20.json");
 const chains = require("../data/chains.json");
 const {
   AxelarQueryAPI,

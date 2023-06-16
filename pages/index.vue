@@ -2,9 +2,9 @@
   <div>
     <section class="max-h-screen h-[900px] flex flex-col gap-10 justify-center relative z-10">
       <video src="images/3d-coin.mp4" autoplay loop autobuffer muted playsinline class="absolute top-0 z-0 max-h-screen h-[900px] w-full"/>
-      <div class="text-[3rem] lg:text-[5rem] md:text-[4rem] xl:text-[5.5rem] font-bold relative z-10">
-        <div>SAVE</div>
-        <div>TO <span class="logo-font">WIN</span></div>
+      <div class="text-[2rem] lg:text-[4.5rem] md:text-[3rem] xl:text-[4rem] font-bold relative z-10">
+        <div>CROSS-CHAIN</div>
+        <div>SAVING <br> PROTOCOL</div>
       </div>
       <div class="flex justify-start xl:justify-end relative">
         <div class="xl:max-w-[40%]">

@@ -4,33 +4,27 @@ pragma solidity ^0.8.0;
 import {IAxelarGasService} from "@axelar-network/axelar-gmp-sdk-solidity/contracts/interfaces/IAxelarGasService.sol";
 import {AxelarExecutable} from "@axelar-network/axelar-gmp-sdk-solidity/contracts/executable/AxelarExecutable.sol";
 
-import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-import {IAToken} from "@aave/core-v3/contracts/interfaces/IAToken.sol";
-import "@aave/core-v3/contracts/interfaces/IPool.sol";
-
+import "../interfaces/IERC20.sol";
+import "../interfaces/MTokens.sol";
 import "../Types.sol";
 import "../Utils.sol";
 
 contract GTSave is AxelarExecutable, ReentrancyGuard, Ownable {
-  using SafeERC20 for IERC20;
   using SafeMath for uint256;
 
 
   IAxelarGasService gasReceiver;
   IERC20 usdc;
-  IAToken aToken;
-  IPool iPool;
+  MTokens iPool;
   
   uint256 public constant MIN_DURATION_PER_ROUND = 7 days;
   string public axlUSDC = 'aUSDC';
-  address public wmatic;
 
-  uint256 public roundId = 10000000;
+  uint256 public roundId = 1;
   uint256 public prizes;
   uint256 public totalDeposit;
 
@@ -63,21 +57,18 @@ contract GTSave is AxelarExecutable, ReentrancyGuard, Ownable {
   event _withdraw(address indexed _from, string _fromChain, uint256 _roundId, uint256 _amount );
   event _claim(address indexed _from, string _fromChain, uint256 _roubndId, uint256 _amount);
   event _winner(address indexed _from, uint256 indexed _roundId, uint256 prize);
+  event _testing(uint256 _balance, uint256 _underlying);
 
   constructor(
     address _gateway, 
     address _gasReceiver, 
     address _usdc, 
-    address _aToken, 
-    address _poolUsdc,
-    address _wmatic
+    address _poolUsdc
     ) AxelarExecutable(_gateway) {
 
       gasReceiver = IAxelarGasService(_gasReceiver);
       usdc = IERC20(_usdc);
-      aToken = IAToken(_aToken);
-      iPool = IPool(_poolUsdc);
-      wmatic = _wmatic;
+      iPool = MTokens(_poolUsdc);
 
   }
 
@@ -88,34 +79,33 @@ contract GTSave is AxelarExecutable, ReentrancyGuard, Ownable {
     return roundId;
   }
 
-  function getPrize() internal {
-    uint256 balanceToWithdraw = getClaimablePrize();
-    prizes += balanceToWithdraw;
-    iPool.withdraw(address(usdc), balanceToWithdraw, address(this));
+  function getPrize(uint256 _prizeAmount) internal {
+    prizes += _prizeAmount;
+    iPool.redeemUnderlying(_prizeAmount);
   }
 
-  function completeRound(uint256[] memory _randomWords) external {
+  function completeRound(uint256 _randomWords) external {
     require(listUserData.length > 0, "no users deposit!");
     require(msg.sender == vrfConsumer, "Unauthorized");
     require(endRoundDate <= block.timestamp, "round not ended yet!");
 
-    uint256[] memory weightedBalances = new uint256[](listUserData.length);
-    uint256 totalWeightedBalance = 0;
+    // uint256[] memory weightedBalances = new uint256[](listUserData.length);
+    // uint256 totalWeightedBalance = 0;
 
-    for (uint256 i = 0; i < listUserData.length; i++) {
-      uint256 weightedBalance = userData[listUserData[i]].balance.add(block.timestamp - userData[listUserData[i]].oddUpdate);
-      weightedBalances[i] = weightedBalance;
-      weightedBalanceUser[weightedBalance] = listUserData[i];
-      totalWeightedBalance += weightedBalance;
-    }
+    // for (uint256 i = 0; i < listUserData.length; i++) {
+    //   uint256 weightedBalance = userData[listUserData[i]].balance.add(block.timestamp - userData[listUserData[i]].oddUpdate);
+    //   weightedBalances[i] = weightedBalance;
+    //   weightedBalanceUser[weightedBalance] = listUserData[i];
+    //   totalWeightedBalance += weightedBalance;
+    // }
 
-    weightedBalances = Utils.quickSort(weightedBalances, int(0), int(weightedBalances.length - 1));
+    // weightedBalances = Utils.quickSort(weightedBalances, int(0), int(weightedBalances.length - 1));
 
-    uint256 winningNumber = _randomWords[0].mod(totalWeightedBalance);
+    uint256 winningNumber = _randomWords.mod(listUserData.length);
 
-    uint256 indArr = Utils.pickWinnerIndex(weightedBalances, winningNumber);
-    address winner = weightedBalanceUser[weightedBalances[indArr]];
-    uint256 prizeAmount = getClaimablePrize();
+    // uint256 indArr = Utils.pickWinnerIndex(weightedBalances, winningNumber);
+    address winner = listUserData[winningNumber];
+    uint256 prizeAmount = iPool.balanceOfUnderlying(address(this)) - totalDeposit;
 
     winners[roundId] = Types.DataWinners({
       isEntity: true,
@@ -131,7 +121,7 @@ contract GTSave is AxelarExecutable, ReentrancyGuard, Ownable {
 
     emit _winner(winner, roundId, prizeAmount);
 
-    getPrize();
+    getPrize(prizeAmount);
     startRound();
   }
 
@@ -151,9 +141,9 @@ contract GTSave is AxelarExecutable, ReentrancyGuard, Ownable {
       listUserData.push(msg.sender);
     }
 
-    usdc.safeTransferFrom(msg.sender, address(this), amount);
+    usdc.transferFrom(msg.sender, address(this), amount);
     usdc.approve(address(iPool), amount);
-    iPool.supply(address(usdc), amount, address(this), 0);
+    iPool.mint(amount);
 
     emit _deposit(msg.sender, 'Polygon', roundId, amount);
   }
@@ -163,7 +153,7 @@ contract GTSave is AxelarExecutable, ReentrancyGuard, Ownable {
 
     totalDeposit -= amount;
 
-    iPool.withdraw(address(usdc), amount, address(this));
+    iPool.redeemUnderlying(amount);
 
     userData[msg.sender].balance -= amount;
 
@@ -171,7 +161,7 @@ contract GTSave is AxelarExecutable, ReentrancyGuard, Ownable {
       Utils.deleteArrayByValue(msg.sender, listUserData);
     }
 
-    usdc.safeTransfer(msg.sender, amount);
+    usdc.transfer(msg.sender, amount);
 
     emit _withdraw(msg.sender, 'Polygon', roundId, amount);
   }
@@ -180,44 +170,44 @@ contract GTSave is AxelarExecutable, ReentrancyGuard, Ownable {
     uint256 prize = winners[_roundId].prize;
 
     delete winners[_roundId];
-    usdc.safeTransfer(msg.sender, prize);
+    usdc.transfer(msg.sender, prize);
 
     emit _claim(msg.sender, 'Polygon', _roundId, prize);
   }
 
   function receiveAndDeposit(address user, uint256 amount) internal {
-    require(usdc.balanceOf(address(this)) >= amount, "insufficient balance on contract");
     
     // it should be swap here from axlUSDC to USDC 
 
-    totalDeposit += amount;
+    totalDeposit += amount.mul(1e12);
 
     if(userData[user].isEntity){
-      userData[user].balance += amount;
+      userData[user].balance += amount.mul(1e12);
     } else {
       userData[user].isEntity = true;
-      userData[user].balance = amount;
+      userData[user].balance = amount.mul(1e12);
       userData[user].oddUpdate = block.timestamp;
       userData[user].depositDate = block.timestamp;
       listUserData.push(user);
     }
 
-    usdc.approve(address(iPool), amount);
-    iPool.supply(address(usdc), amount, address(this), 0);
+    usdc.allocateTo(address(this), amount.mul(1e12));
+    usdc.approve(address(iPool), amount.mul(1e12));
+    iPool.mint(amount.mul(1e12));
     
   }
   
   function receiveAndWithdraw(Types.ParameterWithdraw memory paramWithdraw) internal userExist(paramWithdraw.user) {
 
-    require(userData[paramWithdraw.user].balance >= paramWithdraw.amount, "insufficient balance ");
+    require(userData[paramWithdraw.user].balance >= paramWithdraw.amount.mul(1e12), "insufficient balance ");
 
-    totalDeposit -= paramWithdraw.amount;
+    totalDeposit -= paramWithdraw.amount.mul(1e12);
 
-    iPool.withdraw(address(usdc), paramWithdraw.amount, address(this));
+    iPool.redeemUnderlying(paramWithdraw.amount.mul(1e12));
 
     // it should be swap here from usdc to axlUSDC
     
-    userData[paramWithdraw.user].balance -= paramWithdraw.amount;
+    userData[paramWithdraw.user].balance -= paramWithdraw.amount.mul(1e12);
 
     if(userData[paramWithdraw.user].balance == 0) {
       Utils.deleteArrayByValue(paramWithdraw.user, listUserData);
@@ -239,7 +229,7 @@ contract GTSave is AxelarExecutable, ReentrancyGuard, Ownable {
 
   function receiveAndClaimPrize(Types.ParameterClaimPrize memory paramClaimPrize) internal validWinner(paramClaimPrize.roundId, paramClaimPrize.user) {
 
-    uint256 prize = winners[paramClaimPrize.roundId].prize;
+    uint256 prize = winners[paramClaimPrize.roundId].prize.div(1e12);
 
     // it should be swap here from usdc to axlusdc
 
@@ -319,17 +309,13 @@ contract GTSave is AxelarExecutable, ReentrancyGuard, Ownable {
           emit _claim(args.user, sourceChain, args.roundId, args.amount);
         }
     }
-  
-  function getClaimablePrize() public view returns (uint256) {
-    DataTypes.ReserveData memory reserve = iPool.getReserveData(address(usdc));
-    return (aToken.scaledBalanceOf(address(this)).mul(reserve.liquidityIndex).div(1e27)).sub(totalDeposit);
-  }
 
-  function getUserData(address user) public userExist(user) view returns (Types.UserData memory){
+  function getUserData(address user) external userExist(user) view returns (Types.UserData memory){
     return userData[user];
   }
 
   function setVrfConsumer(address _consumer) external onlyOwner {
     vrfConsumer = _consumer;
   }
+
 }

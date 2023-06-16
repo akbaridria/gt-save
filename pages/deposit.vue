@@ -33,7 +33,7 @@
           </div>
           <div class="flex gap-4">
             <component v-if="chains.length > 0" :is="chains[0].logo" pattern="pattern-123123213" />
-            <div>{{ chains.length > 0 ? chains[0].name : 'Unknown' }}</div>
+            <div>{{ chains.length > 0 ? chains[0].name : 'Wrong Network' }}</div>
           </div>
         </div>
         <div class="grid items-center">
@@ -101,7 +101,6 @@ import { getCountDown, getTotalDeposit, getUsdcBalance } from '../scripts/helper
 const moment = require('moment');
 const listChains = require('../data/chains.json');
 const ethers = require('ethers')
-const erc20 = require('../artifacts/@openzeppelin/contracts/token/ERC20/IERC20.sol/IERC20.json');
 
 export default {
   data(){

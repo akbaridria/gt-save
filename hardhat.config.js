@@ -67,11 +67,6 @@ module.exports = {
       url: chains.filter((item) => item.name === "filecoin")[0].rpc,
       accounts: [process.env.PRIV_KEY, process.env.PRIV_KEY2],
     },
-    kava: {
-      chainId: chains.filter((item) => item.name === "kava")[0].chainId,
-      url: chains.filter((item) => item.name === "kava")[0].rpc,
-      accounts: [process.env.PRIV_KEY, process.env.PRIV_KEY2],
-    },
     "ethereum-2": {
       url: chains.filter((item) => item.name === "ethereum-2")[0].rpc,
       accounts: [process.env.PRIV_KEY, process.env.PRIV_KEY2],

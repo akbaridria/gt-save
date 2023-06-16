@@ -6,19 +6,17 @@ import {IAxelarGasService} from '@axelar-network/axelar-gmp-sdk-solidity/contrac
 import {AxelarExecutable} from '@axelar-network/axelar-gmp-sdk-solidity/contracts/executable/AxelarExecutable.sol';
 import '@axelar-network/axelar-gmp-sdk-solidity/contracts/utils/AddressString.sol';
 
-import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
-import '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
 import '@openzeppelin/contracts/utils/math/SafeMath.sol';
 
+import "../interfaces/IERC20.sol";
 import '../Types.sol';
 
 contract GTSaveConnector is AxelarExecutable {
   using AddressToString for address;
   using SafeMath for uint256;
-  using SafeERC20 for IERC20;
 
   IAxelarGasService gasReceiver;
-  string public constant destChain = 'Polygon';
+  string public constant destChain = 'Moonbeam';
   string public constant supportedAxlToken = 'aUSDC';
   address public axlUsdc;
 
@@ -80,8 +78,8 @@ contract GTSaveConnector is AxelarExecutable {
     require(IERC20(axlUsdc).balanceOf(msg.sender) > amount, 'GTSave: insufficient balance');
     require(msg.value > 0, 'GTSave: insufficient ether');
 
-    IERC20(axlUsdc).safeTransferFrom(msg.sender, address(this), amount);
-    IERC20(axlUsdc).safeApprove(address(gateway), amount);
+    IERC20(axlUsdc).transferFrom(msg.sender, address(this), amount);
+    IERC20(axlUsdc).approve(address(gateway), amount);
     Types.PayloadArgs memory paramArgs = Types.PayloadArgs({
       user: msg.sender,
       amount: amount,
@@ -189,7 +187,7 @@ contract GTSaveConnector is AxelarExecutable {
   ) internal override {
     address recipient = abi.decode(payload, (address));
     address tokenAddress = gateway.tokenAddresses(tokenSymbol);
-    IERC20(tokenAddress).safeTransfer(recipient, amount);
+    IERC20(tokenAddress).transfer(recipient, amount);
   }
 
 }

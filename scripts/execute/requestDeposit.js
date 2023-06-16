@@ -10,14 +10,14 @@ const { ethers, Contract } = require("ethers");
 require("dotenv").config();
 
 const Connector = require("../../artifacts/contracts/gt-save/GTSaveConnector.sol/GTSaveConnector.json");
-const IERC20 = require("../../artifacts/@openzeppelin/contracts/token/ERC20/IERC20.sol/IERC20.json");
+const IERC20 = require("../../artifacts/contracts/interfaces/IERC20.sol/IERC20.json");
 
 async function main() {
   const chains = require("../../data/chains.json");
   const avalanche = chains.filter((item) => item.name === "Avalanche");
-  const polygon = chains.filter((item) => item.name === "Polygon");
+  const moonbeam = chains.filter((item) => item.name === "Moonbeam");
   const provider = new ethers.providers.JsonRpcProvider(avalanche[0].rpc);
-  const signer = new ethers.Wallet(process.env.PRIV_KEY, provider);
+  const signer = new ethers.Wallet(process.env.PRIV_KEY2, provider);
   const amount = ethers.utils.parseUnits("5", "6");
 
   console.log("Starting testing to request deposit..");
@@ -46,7 +46,7 @@ async function main() {
   const api = new AxelarQueryAPI({ environment: Environment.TESTNET });
   const gasFee = await api.estimateGasFee(
     EvmChain.AVALANCHE,
-    EvmChain.POLYGON,
+    EvmChain.MOONBEAM,
     GasToken.AVAX,
     1000000,
     1.5
@@ -58,7 +58,7 @@ async function main() {
 
   const tx = await gTSaveConnector.requestDeposit(
     amount,
-    polygon[0].contractAddress,
+    moonbeam[0].contractAddress,
     {
       value: ethers.BigNumber.from(gasFee),
     }

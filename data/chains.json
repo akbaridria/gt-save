@@ -1,5 +1,34 @@
 [
   {
+    "name": "Moonbeam",
+    "chainId": 1287,
+    "rpc": "https://rpc.api.moonbase.moonbeam.network",
+    "gateway": "0x5769D84DD62a6fD969856c75c7D321b84d455929",
+    "gasReceiver": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6",
+    "contractAddress": "0xb163166eB7e1552D370e73f33Af911f20E86e807",
+    "axlToken": "0xD1633F7Fb3d716643125d6415d4177bC36b7186b",
+    "isEtherscan": true,
+    "usdc": "0x3799D95Ee109129951c6b31535b2B5AA6dbF108c",
+    "poolUsdc": "0x18f324E21846F1C21F4fbF8228705B17897eF15A",
+    "nodary": "0xa0AD79D995DdeeB18a14eAef56A549A04e3Aa1Bd",
+    "logo": "LogosMoonbeam",
+    "detail": {
+      "chainName": "Moonbase",
+      "chainId": "0x507",
+      "nativeCurrency": {
+        "name": "DEV",
+        "decimals": 18,
+        "symbol": "DEV"
+      },
+      "rpcUrls": [
+        "https://rpc.api.moonbase.moonbeam.network"
+      ]
+    },
+    "fee": "moonbeam",
+    "symbol": "DEV",
+    "vrfConsumer": "0x84822083f91E04D31Ee67C5bC36dd2AD59215Aa7"
+  },
+  {
     "name": "Polygon",
     "chainId": 80001,
     "rpc": "https://rpc-mumbai.maticvigil.com",
@@ -19,8 +48,14 @@
     "detail": {
       "chainName": "Polygon Testnet",
       "chainId": "0x13881",
-      "nativeCurrency": { "name": "MATIC", "decimals": 18, "symbol": "MATIC" },
-      "rpcUrls": ["https://polygon-rpc.com/"]
+      "nativeCurrency": {
+        "name": "MATIC",
+        "decimals": 18,
+        "symbol": "MATIC"
+      },
+      "rpcUrls": [
+        "https://polygon-rpc.com/"
+      ]
     },
     "fee": "polygon",
     "symbol": "MATIC"
@@ -31,15 +66,21 @@
     "rpc": "https://api.avax-test.network/ext/bc/C/rpc",
     "gateway": "0xC249632c2D40b9001FE907806902f63038B737Ab",
     "gasReceiver": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6",
-    "contractAddress": "0xB00191b365784f74fc23Dd4C46B503d6063D1570",
+    "contractAddress": "0x105BDE054001bC1bf9f9D00b15e9Cd9A1AA765D8",
     "axlToken": "0x57F1c63497AEe0bE305B8852b354CEc793da43bB",
     "isEtherscan": true,
     "logo": "LogosAvalanche",
     "detail": {
       "chainName": "Avalanche Testnet",
       "chainId": "0xa869",
-      "nativeCurrency": { "name": "AVAX", "decimals": 18, "symbol": "AVAX" },
-      "rpcUrls": ["https://api.avax-test.network/ext/bc/C/rpc"]
+      "nativeCurrency": {
+        "name": "AVAX",
+        "decimals": 18,
+        "symbol": "AVAX"
+      },
+      "rpcUrls": [
+        "https://api.avax-test.network/ext/bc/C/rpc"
+      ]
     },
     "fee": "avalanche",
     "symbol": "AVAX"
@@ -57,8 +98,14 @@
     "detail": {
       "chainName": "BSC Testnet",
       "chainId": "0x61",
-      "nativeCurrency": { "name": "BNB", "decimals": 18, "symbol": "BNB" },
-      "rpcUrls": ["https://bsc-testnet.public.blastapi.io"]
+      "nativeCurrency": {
+        "name": "BNB",
+        "decimals": 18,
+        "symbol": "BNB"
+      },
+      "rpcUrls": [
+        "https://bsc-testnet.public.blastapi.io"
+      ]
     },
     "fee": "binance",
     "symbol": "BNB"
@@ -76,30 +123,17 @@
     "detail": {
       "chainName": "Fantom Testnet",
       "chainId": "0xfa2",
-      "nativeCurrency": { "name": "FTM", "decimals": 18, "symbol": "FTM" },
-      "rpcUrls": ["https://rpc.testnet.fantom.network"]
+      "nativeCurrency": {
+        "name": "FTM",
+        "decimals": 18,
+        "symbol": "FTM"
+      },
+      "rpcUrls": [
+        "https://rpc.testnet.fantom.network"
+      ]
     },
     "fee": "fantom",
     "symbol": "FTM"
-  },
-  {
-    "name": "Moonbeam",
-    "chainId": 1287,
-    "rpc": "https://rpc.api.moonbase.moonbeam.network",
-    "gateway": "0x5769D84DD62a6fD969856c75c7D321b84d455929",
-    "gasReceiver": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6",
-    "contractAddress": "0xECf71718B5fEF085cC29F87045b03411c6E1707C",
-    "axlToken": "0xD1633F7Fb3d716643125d6415d4177bC36b7186b",
-    "isEtherscan": true,
-    "logo": "LogosMoonbeam",
-    "detail": {
-      "chainName": "Moonbase",
-      "chainId": "0x507",
-      "nativeCurrency": { "name": "DEV", "decimals": 18, "symbol": "DEV" },
-      "rpcUrls": ["https://rpc.api.moonbase.moonbeam.network"]
-    },
-    "fee": "moonbeam",
-    "symbol": "DEV"
   },
   {
     "name": "aurora",
@@ -114,8 +148,14 @@
     "detail": {
       "chainName": "Aurora Testnet",
       "chainId": "0x4e454153",
-      "nativeCurrency": { "name": "ETH", "decimals": 18, "symbol": "ETH" },
-      "rpcUrls": ["https://testnet.aurora.dev"]
+      "nativeCurrency": {
+        "name": "ETH",
+        "decimals": 18,
+        "symbol": "ETH"
+      },
+      "rpcUrls": [
+        "https://testnet.aurora.dev"
+      ]
     },
     "fee": "aurora",
     "symbol": "aETH"
@@ -133,8 +173,14 @@
     "detail": {
       "chainName": "Celo Testnet",
       "chainId": "0xaef3",
-      "nativeCurrency": { "name": "CELO", "decimals": 18, "symbol": "CELO" },
-      "rpcUrls": ["https://alfajores-forno.celo-testnet.org"]
+      "nativeCurrency": {
+        "name": "CELO",
+        "decimals": 18,
+        "symbol": "CELO"
+      },
+      "rpcUrls": [
+        "https://alfajores-forno.celo-testnet.org"
+      ]
     },
     "fee": "celo",
     "symbol": "CELO"
@@ -152,8 +198,14 @@
     "detail": {
       "chainName": "Arbitrum Testnet",
       "chainId": "0x66eed",
-      "nativeCurrency": { "name": "AGOR", "decimals": 18, "symbol": "AGOR" },
-      "rpcUrls": ["https://goerli-rollup.arbitrum.io/rpc"]
+      "nativeCurrency": {
+        "name": "AGOR",
+        "decimals": 18,
+        "symbol": "AGOR"
+      },
+      "rpcUrls": [
+        "https://goerli-rollup.arbitrum.io/rpc"
+      ]
     },
     "fee": "arbitrum",
     "symbol": "ETH"
@@ -171,8 +223,14 @@
     "detail": {
       "chainName": "Optimism Testnet",
       "chainId": "0x1a4",
-      "nativeCurrency": { "name": "ETH", "decimals": 18, "symbol": "ETH" },
-      "rpcUrls": ["https://goerli.optimism.io"]
+      "nativeCurrency": {
+        "name": "ETH",
+        "decimals": 18,
+        "symbol": "ETH"
+      },
+      "rpcUrls": [
+        "https://goerli.optimism.io"
+      ]
     },
     "fee": "optimism",
     "symbol": "ETH"
@@ -190,8 +248,14 @@
     "detail": {
       "chainName": "Base Testnet",
       "chainId": "0x14a33",
-      "nativeCurrency": { "name": "ETH", "decimals": 18, "symbol": "ETH" },
-      "rpcUrls": ["https://goerli.base.org"]
+      "nativeCurrency": {
+        "name": "ETH",
+        "decimals": 18,
+        "symbol": "ETH"
+      },
+      "rpcUrls": [
+        "https://goerli.base.org"
+      ]
     },
     "fee": "base",
     "symbol": "ETH"
@@ -209,8 +273,14 @@
     "detail": {
       "chainName": "Filecoin Testnet",
       "chainId": "0xc45",
-      "nativeCurrency": { "name": "tFIL", "decimals": 18, "symbol": "tFIL" },
-      "rpcUrls": ["https://api.hyperspace.node.glif.io/rpc/v1"]
+      "nativeCurrency": {
+        "name": "tFIL",
+        "decimals": 18,
+        "symbol": "tFIL"
+      },
+      "rpcUrls": [
+        "https://api.hyperspace.node.glif.io/rpc/v1"
+      ]
     },
     "fee": "filecoin",
     "symbol": "FIL"
@@ -228,8 +298,14 @@
     "detail": {
       "chainName": "Goerli",
       "chainId": "0x5",
-      "nativeCurrency": { "name": "ETH", "decimals": 18, "symbol": "ETH" },
-      "rpcUrls": ["https://rpc.goerli.eth.gateway.fm"]
+      "nativeCurrency": {
+        "name": "ETH",
+        "decimals": 18,
+        "symbol": "ETH"
+      },
+      "rpcUrls": [
+        "https://rpc.goerli.eth.gateway.fm"
+      ]
     },
     "fee": "ethereum-2",
     "symbol": "ETH"
