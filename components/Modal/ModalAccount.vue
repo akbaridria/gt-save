@@ -179,7 +179,7 @@ export default {
     }
   },
   async mounted(){
-    this.totalDeposit = await getTotalDeposit(this.$config.privKey)
+    this.totalDeposit = await getTotalDeposit()
   },
   methods: {
     viewBlockExplorer(){

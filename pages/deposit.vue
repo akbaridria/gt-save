@@ -22,14 +22,14 @@
             <div class="text-[0.5rem]">Seconds</div>
           </div>
         </div>
-      </div>
+      </div>  
     </div>
     <div class="grid lg:grid-cols-2 xl:grid-cols-2 gap-4">
       <div class="border border-netral-300 rounded p-[1rem] md:p-[2rem] lg:p-[2.5rem] xl:p-[3rem] grid gap-4 justify-center text-center max-w-full">
         <div class="flex justify-center gap-7">
           <div v-if="chains.length > 0" class="flex gap-4">
             <LogosUsdc />
-            <div>{{ chains[0].name === 'Polygon' ? 'USDC' : 'aUSDC' }}</div>
+            <div>{{ chains[0].name === 'Moonbeam' ? 'USDC' : 'aUSDC' }}</div>
           </div>
           <div class="flex gap-4">
             <component v-if="chains.length > 0" :is="chains[0].logo" pattern="pattern-123123213" />
@@ -61,10 +61,20 @@
         </div>
       </div>
       <div class="flex flex-col gap-4">
-        <div class="border border-netral-300 rounded p-[1.5rem] text-lg flex justify-between items-center max-w-full">
-          <div class="flex gap-3"> <IconsDollar /> Total Deposit</div>
-          <div class="font-bold flex gap-2 items-center">
-            $ <span v-if="loading"><IconsLoadingCircle class="animate-spin" :size="16" /></span> <span v-else>{{ totalDeposit }}</span>
+        <div class="border border-netral-300 rounded p-[1.5rem] text-lg max-w-full grid gap-4">
+          <div class="flex justify-between items-center">
+            <div class="flex items-center gap-3"> <IconsDollar /> Total Deposit</div>
+            <div class="font-bold flex gap-2 items-center">
+              $ <span v-if="loading"><IconsLoadingCircle class="animate-spin" :size="16" /></span> <span v-else>{{ totalDeposit }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="border border-netral-300 rounded p-[1.5rem] text-lg max-w-full grid gap-4">
+          <div class="flex justify-between items-center">
+            <div class="flex items-center gap-3"> <ion-icon name="gift-outline" class="text-[1.4rem]"></ion-icon> Total Reward at Round #{{ roundId }}</div>
+            <div class="font-bold flex gap-2 items-center text-primary-100">
+              $ <span v-if="loading"><IconsLoadingCircle class="animate-spin" :size="16" /></span> <span v-else>{{ totalReward }}</span>
+            </div>
           </div>
         </div>
         <div class="border border-netral-300 rounded p-[1.5rem] flex flex-col max-w-full">
@@ -97,7 +107,7 @@
 </template>
 
 <script>
-import { getCountDown, getTotalDeposit, getUsdcBalance } from '../scripts/helper'
+import { getCountDown, getPrize, getRound, getTotalDeposit, getUsdcBalance } from '../scripts/helper'
 const moment = require('moment');
 const listChains = require('../data/chains.json');
 const ethers = require('ethers')
@@ -123,6 +133,8 @@ export default {
     const isConnect = this.$store.state.isConnected
     const loading = true
     const urlExplorer = 'https://mumbai.polygonscan.com/tx/'
+    const roundId = 0
+    const totalReward = 0
     return {
       amountDeposit,
       countDown,
@@ -134,7 +146,9 @@ export default {
       detailError,
       isConnect,
       loading,
-      urlExplorer
+      urlExplorer,
+      roundId,
+      totalReward
     }
   },
   watch: {
@@ -155,16 +169,25 @@ export default {
     '$store.state.isConnected': function(newV) {
       this.isConnect = newV
     },
+    '$store.state.userAddress': async function(newV) {
+      this.amountDeposit = 0
+      await this.getBalance()
+    },
     amountDeposit(newV) {
-      if(newV > 5) {
-        this.detailError.error = true
-        this.detailError.message = 'Max. 5 (a)USDC'
-      }
-      else if(this.usdcBalance < newV) {
-        this.detailError.error = true;
-        this.detailError.message = 'Insufficient balance'
-      } else {
-        this.detailError.error = false
+      if(newV && this.usdcBalance > 0) {
+        let amount = ethers.utils.parseEther(newV)
+        let balance = ethers.utils.parseEther(this.usdcBalance)
+        let maxAmount = ethers.utils.parseEther('5')
+        if(amount.gt(maxAmount)) {
+          this.detailError.error = true
+          this.detailError.message = 'Max. 5 (a)USDC'
+        }
+        else if(balance.lt(amount)) {
+          this.detailError.error = true;
+          this.detailError.message = 'Insufficient balance'
+        } else {
+          this.detailError.error = false
+        }
       }
     },
     usdcBalance(newV) {
@@ -178,11 +201,13 @@ export default {
   },
   async mounted(){
     this.loading = true
-    const endRound = await getCountDown(this.$config.privKey)
-    this.totalDeposit = await getTotalDeposit(this.$config.privKey)
+    const endRound = await getCountDown()
+    this.totalDeposit = await getTotalDeposit()
     this.intervalId = setInterval(() => {this.formattedCountDown(endRound)}, 1000)
-    await this.getListWinners()
+    // await this.getListWinners()
     await this.getBalance()
+    this.totalReward = await getPrize()
+    this.roundId = await getRound()
     this.loading = false
   },
   beforeDestroy() {

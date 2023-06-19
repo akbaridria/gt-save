@@ -49,6 +49,8 @@ export default {
           this.$store.commit('setConnected', false);
           this.$store.commit('setChainId', null);
           this.$store.commit('setUserAddress', null)
+        } else {
+          this.$store.commit('setUserAddress', e[0])
         }
       })
     }
@@ -92,8 +94,8 @@ export default {
           this.$store.commit('setConnected', true)
           const isSupported = chains.filter(item => item.chainId === chainId);
           if(isSupported.length === 0) {
-            const polygon = chains.filter(item => item.name === 'Polygon')[0];
-            this.switchWallet(polygon)
+            const moonbeam = chains.filter(item => item.name === 'Moonbeam')[0];
+            this.switchWallet(moonbeam)
           } else {
             this.$store.commit('setChainId', chainId);
           }

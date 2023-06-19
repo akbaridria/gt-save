@@ -20,13 +20,12 @@
         "decimals": 18,
         "symbol": "DEV"
       },
-      "rpcUrls": [
-        "https://rpc.api.moonbase.moonbeam.network"
-      ]
+      "rpcUrls": ["https://rpc.api.moonbase.moonbeam.network"]
     },
     "fee": "moonbeam",
     "symbol": "DEV",
-    "vrfConsumer": "0x84822083f91E04D31Ee67C5bC36dd2AD59215Aa7"
+    "vrfConsumer": "0x84822083f91E04D31Ee67C5bC36dd2AD59215Aa7",
+    "block_explorer": "https://moonbase.moonscan.io/"
   },
   {
     "name": "Polygon",
@@ -53,12 +52,11 @@
         "decimals": 18,
         "symbol": "MATIC"
       },
-      "rpcUrls": [
-        "https://polygon-rpc.com/"
-      ]
+      "rpcUrls": ["https://polygon-rpc.com/"]
     },
     "fee": "polygon",
-    "symbol": "MATIC"
+    "symbol": "MATIC",
+    "block_explorer": "https://mumbai.polygonscan.com/"
   },
   {
     "name": "Avalanche",
@@ -78,12 +76,11 @@
         "decimals": 18,
         "symbol": "AVAX"
       },
-      "rpcUrls": [
-        "https://api.avax-test.network/ext/bc/C/rpc"
-      ]
+      "rpcUrls": ["https://api.avax-test.network/ext/bc/C/rpc"]
     },
     "fee": "avalanche",
-    "symbol": "AVAX"
+    "symbol": "AVAX",
+    "block_explorer": "https://testnet.snowtrace.io/"
   },
   {
     "name": "binance",
@@ -103,12 +100,11 @@
         "decimals": 18,
         "symbol": "BNB"
       },
-      "rpcUrls": [
-        "https://bsc-testnet.public.blastapi.io"
-      ]
+      "rpcUrls": ["https://bsc-testnet.public.blastapi.io"]
     },
     "fee": "binance",
-    "symbol": "BNB"
+    "symbol": "BNB",
+    "block_explorer": "https://testnet.bscscan.com/"
   },
   {
     "name": "Fantom",
@@ -128,12 +124,11 @@
         "decimals": 18,
         "symbol": "FTM"
       },
-      "rpcUrls": [
-        "https://rpc.testnet.fantom.network"
-      ]
+      "rpcUrls": ["https://rpc.testnet.fantom.network"]
     },
     "fee": "fantom",
-    "symbol": "FTM"
+    "symbol": "FTM",
+    "block_explorer": "https://testnet.ftmscan.com/"
   },
   {
     "name": "aurora",
@@ -153,12 +148,11 @@
         "decimals": 18,
         "symbol": "ETH"
       },
-      "rpcUrls": [
-        "https://testnet.aurora.dev"
-      ]
+      "rpcUrls": ["https://testnet.aurora.dev"]
     },
     "fee": "aurora",
-    "symbol": "aETH"
+    "symbol": "aETH",
+    "block_explorer": "https://explorer.testnet.aurora.dev/"
   },
   {
     "name": "celo",
@@ -178,12 +172,11 @@
         "decimals": 18,
         "symbol": "CELO"
       },
-      "rpcUrls": [
-        "https://alfajores-forno.celo-testnet.org"
-      ]
+      "rpcUrls": ["https://alfajores-forno.celo-testnet.org"]
     },
     "fee": "celo",
-    "symbol": "CELO"
+    "symbol": "CELO",
+    "block_explorer": "https://alfajores.celoscan.io/"
   },
   {
     "name": "arbitrum",
@@ -203,12 +196,11 @@
         "decimals": 18,
         "symbol": "AGOR"
       },
-      "rpcUrls": [
-        "https://goerli-rollup.arbitrum.io/rpc"
-      ]
+      "rpcUrls": ["https://goerli-rollup.arbitrum.io/rpc"]
     },
     "fee": "arbitrum",
-    "symbol": "ETH"
+    "symbol": "ETH",
+    "block_explorer": "https://testnet.arbiscan.io/"
   },
   {
     "name": "optimism",
@@ -228,12 +220,11 @@
         "decimals": 18,
         "symbol": "ETH"
       },
-      "rpcUrls": [
-        "https://goerli.optimism.io"
-      ]
+      "rpcUrls": ["https://goerli.optimism.io"]
     },
     "fee": "optimism",
-    "symbol": "ETH"
+    "symbol": "ETH",
+    "block_explorer": "https://goerli-optimism.etherscan.io/"
   },
   {
     "name": "base",
@@ -253,37 +244,11 @@
         "decimals": 18,
         "symbol": "ETH"
       },
-      "rpcUrls": [
-        "https://goerli.base.org"
-      ]
+      "rpcUrls": ["https://goerli.base.org"]
     },
     "fee": "base",
-    "symbol": "ETH"
-  },
-  {
-    "name": "filecoin",
-    "chainId": 3141,
-    "rpc": "https://api.hyperspace.node.glif.io/rpc/v1",
-    "gateway": "0xe432150cce91c13a887f7D836923d5597adD8E31",
-    "gasReceiver": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6",
-    "contractAddress": "0x12aaA99572B037b893Cb37D06d42c28a87AaAC37",
-    "axlToken": "0x254d06f33bDc5b8ee05b2ea472107E300226659A",
-    "isEtherscan": false,
-    "logo": "LogosFilecoin",
-    "detail": {
-      "chainName": "Filecoin Testnet",
-      "chainId": "0xc45",
-      "nativeCurrency": {
-        "name": "tFIL",
-        "decimals": 18,
-        "symbol": "tFIL"
-      },
-      "rpcUrls": [
-        "https://api.hyperspace.node.glif.io/rpc/v1"
-      ]
-    },
-    "fee": "filecoin",
-    "symbol": "FIL"
+    "symbol": "ETH",
+    "block_explorer": "https://goerli.basescan.org/"
   },
   {
     "name": "ethereum-2",
@@ -303,11 +268,10 @@
         "decimals": 18,
         "symbol": "ETH"
       },
-      "rpcUrls": [
-        "https://rpc.goerli.eth.gateway.fm"
-      ]
+      "rpcUrls": ["https://rpc.goerli.eth.gateway.fm"]
     },
     "fee": "ethereum-2",
-    "symbol": "ETH"
+    "symbol": "ETH",
+    "block_explorer": "https://goerli.etherscan.io/"
   }
 ]

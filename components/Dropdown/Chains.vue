@@ -4,7 +4,7 @@
     <button type="button" class="border border-netral-300 rounded-lg p-[0.4375rem] flex gap-2 items-center hover:bg-netral-600" id="menu-button" aria-expanded="true" aria-haspopup="true">
       <template v-if="selectedChain.logo">
         <component :is="selectedChain.logo" />
-        <div class="hidden xl:block">{{ selectedChain.name }}</div>
+        <div class="hidden xl:block">{{ selectedChain.detail.chainName }}</div>
         <svg class="-mr-1 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
           <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
         </svg>
@@ -22,7 +22,7 @@
     <div class="py-1" role="none">
       <div @click="changeNetwork(item)" v-for="(item, index) in listChains" :key="index" class="group cursor-pointer flex gap-3 px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="menu-item-0">
         <div><component :is="item.logo" :size="24" class="group-hover:grayscale-0" :class="selectedChain.name === item.name ? 'grayscale-0' : 'grayscale'" /></div>
-        <div>{{ item.name }}</div>
+        <div>{{ item.detail.chainName }}</div>
       </div>
     </div>
   </div>

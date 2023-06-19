@@ -120,7 +120,7 @@ export default {
     async getDetailUser() {
       try {
         this.loading.balance = true
-        const data = await getUserData(this.$config.privKey, this.$store.state.userAddress)
+        const data = await getUserData(this.$store.state.userAddress)
         this.userData.balance = ethers.utils.formatUnits(ethers.BigNumber.from(data.balance), '6')
         this.formattedListWin(data.listWin)
         this.loading.balance = false

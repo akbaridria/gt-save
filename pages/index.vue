@@ -124,10 +124,10 @@ export default {
     }
   },
   async mounted(){
-    const endRound = await getCountDown(this.$config.privKey)
+    const endRound = await getCountDown()
     this.intervalId = setInterval(() => {this.formattedCountDown(endRound)}, 1000);
-    this.prize = await getPrize(this.$config.privKey);
-    this.roundId = await getRound(this.$config.privKey)
+    this.prize = await getPrize();
+    this.roundId = await getRound()
   },
   beforeDestroy() {
     clearInterval(this.intervalId)
