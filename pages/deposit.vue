@@ -68,13 +68,15 @@
               $ <span v-if="loading"><IconsLoadingCircle class="animate-spin" :size="16" /></span> <span v-else>{{ totalDeposit }}</span>
             </div>
           </div>
-        </div>
-        <div class="border border-netral-300 rounded p-[1.5rem] text-lg max-w-full grid gap-4">
           <div class="flex justify-between items-center">
             <div class="flex items-center gap-3"> <ion-icon name="gift-outline" class="text-[1.4rem]"></ion-icon> Total Reward at Round #{{ roundId }}</div>
             <div class="font-bold flex gap-2 items-center text-primary-100">
               $ <span v-if="loading"><IconsLoadingCircle class="animate-spin" :size="16" /></span> <span v-else>{{ totalReward }}</span>
             </div>
+          </div>
+          <div class="flex justify-between align-center">
+            <div>Yield Souce</div>
+            <div class="flex items-center gap-2"><img src="/images/moonwell.png" width="24px" />Moonwell Artemis</div>
           </div>
         </div>
         <div class="border border-netral-300 rounded p-[1.5rem] flex flex-col max-w-full">
@@ -93,7 +95,7 @@
               <div>#{{item.roundId }}</div>
               <div class="hidden xl:block lg:block md:block">{{ item.date }}</div>
               <div>{{ item.winner }}</div>
-              <div>${{ item.amount }}</div>
+              <div>${{ parseFloat(item.amount).toFixed(4) }}</div>
               <IconsExternalLink :size="24" />
             </a>
           </div>
@@ -204,7 +206,7 @@ export default {
     const endRound = await getCountDown()
     this.totalDeposit = await getTotalDeposit()
     this.intervalId = setInterval(() => {this.formattedCountDown(endRound)}, 1000)
-    // await this.getListWinners()
+    await this.getListWinners()
     await this.getBalance()
     this.totalReward = await getPrize()
     this.roundId = await getRound()
@@ -225,11 +227,11 @@ export default {
     },
     async getListWinners(){
       const topic = '0x712f8f97b2d374168ccc696af73af8177e1cd3e052cd391ef8a50136ec2c9d83';
-      await fetch(`https://api.covalenthq.com/v1/matic-mumbai/events/topics/${topic}/?starting-block=35894923&ending-block=latest&key=${this.$config.cKey}`, {method: 'GET'})
+      await fetch(`https://api.covalenthq.com/v1/moonbeam-moonbase-alpha/events/topics/${topic}/?starting-block=4551680&ending-block=latest&key=${this.$config.cKey}`, {method: 'GET'})
         .then((resp) => resp.json())
         .then((data) => {
-          this.listWinners = data.data.items
-          this.formattedListWinner(data.data.items)
+          const gtsave = listChains.filter(item => item.name === 'Moonbeam')[0]
+          this.formattedListWinner(data.data.items.filter(item => item.sender_address === gtsave.contractAddress.toLowerCase()))
         });
     },
     formattedListWinner(data) {
@@ -242,7 +244,7 @@ export default {
           roundId: roundId[0],
           date: moment(data[i].block_signed_at).format('LL'),
           winner: address[0].slice(0,5) + '...' + address[0].slice(-3),
-          amount: ethers.utils.formatUnits(amount[0], '6'),
+          amount: ethers.utils.formatUnits(amount[0], '18'),
           txHash: this.urlExplorer + data[i].tx_hash
         })
       }

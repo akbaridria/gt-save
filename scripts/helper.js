@@ -51,11 +51,14 @@ export const getPrize = async () => {
   const totalDeposit = await gtsave.totalDeposit();
   const exchangeRate = await merc20.exchangeRateStored();
   const totalBalance = await merc20.balanceOf(moonbeam[0].contractAddress);
-  const total = exchangeRate
-    .mul(totalBalance)
-    .sub(totalDeposit)
-    .div(ethers.utils.parseUnits("1", "28"));
-  return parseFloat(ethers.utils.formatEther(total)).toFixed(6);
+  const total =
+    parseFloat(
+      (
+        parseFloat(exchangeRate / 1e28) *
+        parseFloat(ethers.utils.formatUnits(totalBalance, "8"))
+      ).toFixed(6)
+    ) - parseFloat(ethers.utils.formatEther(totalDeposit));
+  return total < 0 ? 0 : total.toFixed(6);
 };
 
 export const getRound = async () => {
@@ -71,10 +74,10 @@ export const getRound = async () => {
 };
 
 export const getUserData = async (sender) => {
-  const polygon = chains.filter((item) => item.name === "Polygon");
-  const providerPol = new ethers.providers.JsonRpcProvider(polygon[0].rpc);
+  const moonbeam = chains.filter((item) => item.name === "Moonbeam");
+  const providerPol = new ethers.providers.JsonRpcProvider(moonbeam[0].rpc);
   const gtsave = new ethers.Contract(
-    polygon[0].contractAddress,
+    moonbeam[0].contractAddress,
     gtSaveContract.abi,
     providerPol
   );
@@ -98,12 +101,12 @@ export const getUsdcBalance = async (sender, chain) => {
 };
 
 export const estimateDepositGas = async (params) => {
-  const polygon = chains.filter((item) => item.name === "Polygon");
+  const moonbeam = chains.filter((item) => item.name === "Moonbeam");
   const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
   const signerPol = provider.getSigner();
 
   const gtsave = new ethers.Contract(
-    polygon[0].contractAddress,
+    moonbeam[0].contractAddress,
     gtSaveContract.abi,
     signerPol
   );
@@ -114,7 +117,7 @@ export const estimateDepositGas = async (params) => {
 };
 
 export const estimateDepositGasOther = async (chain, amount, amountGas) => {
-  const polygon = chains.filter((item) => item.name === "Polygon");
+  const moonbeam = chains.filter((item) => item.name === "Moonbeam");
   const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
   const signerPol = provider.getSigner();
   const gtsave = new ethers.Contract(
@@ -125,7 +128,7 @@ export const estimateDepositGasOther = async (chain, amount, amountGas) => {
 
   const gas = await gtsave.estimateGas.requestDeposit(
     amount,
-    polygon[0].contractAddress,
+    moonbeam[0].contractAddress,
     {
       value: amountGas,
     }
@@ -138,7 +141,7 @@ export const estimateGasApprove = async (chain, amount) => {
   const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
   const signerPol = provider.getSigner();
   const ierc20 = new ethers.Contract(
-    chain[0].name === "Polygon" ? chain[0].usdc : chain[0].axlToken,
+    chain[0].name === "Moonbeam" ? chain[0].usdc : chain[0].axlToken,
     erc20.abi,
     signerPol
   );
@@ -154,7 +157,7 @@ export const checkAllowance = async (chain) => {
   const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
   const signerPol = provider.getSigner();
   const ierc20 = new ethers.Contract(
-    chain[0].name === "Polygon" ? chain[0].usdc : chain[0].axlToken,
+    chain[0].name === "Moonbeam" ? chain[0].usdc : chain[0].axlToken,
     erc20.abi,
     signerPol
   );
@@ -172,7 +175,7 @@ export const axelarDepositFee = async (chain) => {
     const api = new AxelarQueryAPI({ environment: Environment.TESTNET });
     const gasFee = await api.estimateGasFee(
       chain[0].fee,
-      EvmChain["POLYGON"],
+      EvmChain["MOONBEAM"],
       chain[0].symbol,
       1000000,
       1.5
@@ -185,7 +188,7 @@ export const approveTx = async (chain, amount) => {
   const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
   const signerPol = provider.getSigner();
   const ierc20 = new ethers.Contract(
-    chain[0].name === "Polygon" ? chain[0].usdc : chain[0].axlToken,
+    chain[0].name === "Moonbeam" ? chain[0].usdc : chain[0].axlToken,
     erc20.abi,
     signerPol
   );
@@ -216,14 +219,14 @@ export const getFeeAxelarTwoWay = async (chain) => {
   const api = new AxelarQueryAPI({ environment: Environment.TESTNET });
   const gasFee = await api.estimateGasFee(
     chain[0].fee,
-    "polygon",
+    "moonbeam",
     chain[0].symbol,
     1000000,
     2
   );
 
   const feeBack = await api.estimateGasFee(
-    "polygon",
+    "moonbeam",
     chain[0].fee,
     chain[0].symbol,
     1000000,
@@ -236,11 +239,11 @@ export const getFeeAxelarTwoWay = async (chain) => {
 };
 
 export const withdrawOnPolygon = async (amount) => {
-  const polygon = chains.filter((item) => item.name === "Polygon");
+  const moonbeam = chains.filter((item) => item.name === "Moonbeam");
   const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
   const signerPol = provider.getSigner();
   const gtsave = new ethers.Contract(
-    polygon[0].contractAddress,
+    moonbeam[0].contractAddress,
     gtSaveContract.abi,
     signerPol
   );
@@ -249,7 +252,7 @@ export const withdrawOnPolygon = async (amount) => {
 };
 
 export const withdrawOthers = async (chain, amount, amountGas) => {
-  const polygon = chains.filter((item) => item.name === "Polygon");
+  const moonbeam = chains.filter((item) => item.name === "Moonbeam");
   const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
   const signerPol = provider.getSigner();
   const gtsaveConnector = new ethers.Contract(
@@ -259,7 +262,7 @@ export const withdrawOthers = async (chain, amount, amountGas) => {
   );
   const tx = await gtsaveConnector.requestWithdraw(
     amount,
-    polygon[0].contractAddress,
+    moonbeam[0].contractAddress,
     {
       value: amountGas,
       gasLimit: 500000,
@@ -269,11 +272,11 @@ export const withdrawOthers = async (chain, amount, amountGas) => {
 };
 
 export const claimOnPolygon = async (roundId) => {
-  const polygon = chains.filter((item) => item.name === "Polygon");
+  const moonbeam = chains.filter((item) => item.name === "Moonbeam");
   const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
   const signerPol = provider.getSigner();
   const gtsave = new ethers.Contract(
-    polygon[0].contractAddress,
+    moonbeam[0].contractAddress,
     gtSaveContract.abi,
     signerPol
   );
@@ -282,7 +285,7 @@ export const claimOnPolygon = async (roundId) => {
 };
 
 export const claimOthersOthers = async (chain, roundId, amountGas) => {
-  const polygon = chains.filter((item) => item.name === "Polygon");
+  const moonbeam = chains.filter((item) => item.name === "Moonbeam");
   const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
   const signerPol = provider.getSigner();
   const gtsaveConnector = new ethers.Contract(
@@ -292,7 +295,7 @@ export const claimOthersOthers = async (chain, roundId, amountGas) => {
   );
   const tx = await gtsaveConnector.requestClaimPrize(
     roundId,
-    polygon[0].contractAddress,
+    moonbeam[0].contractAddress,
     {
       value: amountGas,
       gasLimit: 500000,
@@ -344,4 +347,31 @@ export const batchDeposit = async (amount) => {
     []
   );
   return tx;
+};
+
+export const checkWinners = async (roundId) => {
+  const moonbeam = chains.filter((item) => item.name === "Moonbeam");
+  const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+  const gtsave = new ethers.Contract(
+    moonbeam[0].contractAddress,
+    gtSaveContract.abi,
+    provider
+  );
+
+  const winner = await gtsave.winners(roundId);
+  return winner.isEntity;
+};
+
+export const showToast = (text = "This is a toast") => {
+  Toastify({
+    text: text,
+    duration: 3000,
+    close: true,
+    gravity: "bottom",
+    position: "right",
+    stopOnFocus: true,
+    style: {
+      background: "rgb(220, 38, 38)",
+    },
+  }).showToast();
 };

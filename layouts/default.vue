@@ -70,7 +70,6 @@ export default {
   },
   methods: {
     showModalClaim(data) {
-      console.log(data)
       this.claimRoundId = data.roundId
       this.userPrize = data.prize
       this.openModalClaim = true

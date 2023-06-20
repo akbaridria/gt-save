@@ -14,7 +14,14 @@ export default {
       { hid: "description", name: "description", content: "" },
       { name: "format-detection", content: "telephone=no" },
     ],
-    link: [{ rel: "icon", type: "image/x-icon", href: "/images/logo.svg" }],
+    link: [
+      { rel: "icon", type: "image/x-icon", href: "/images/logo.svg" },
+      {
+        rel: "stylesheet",
+        type: "text/css",
+        href: "https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css",
+      },
+    ],
     script: [
       {
         type: "module",
@@ -28,6 +35,11 @@ export default {
       {
         src: "https://cdn.jsdelivr.net/npm/minidenticons@3.1.2/minidenticons.min.js",
         type: "module",
+        body: true,
+      },
+      {
+        src: "https://cdn.jsdelivr.net/npm/toastify-js",
+        type: "text/javascript",
         body: true,
       },
     ],

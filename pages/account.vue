@@ -15,7 +15,7 @@
               <div class="text-lg line-clamp-1">{{ userData.user.slice(0, 5) + '...' + userData.user.slice(-3) }}</div>
             </div>
             <div class="flex items-center gap-4 text-xl">
-              <div class="flex gap-2 items-center">$ <span v-if="!loading.all || !loading.balance">{{ userData.balance }}</span><span v-else><IconsLoadingCircle :size="16" class="animate-spin" /></span></div>
+              <div class="flex gap-2 items-center">$ <span v-if="!loading.all || !loading.balance">{{ parseFloat(userData.balance).toFixed(6) }}</span><span v-else><IconsLoadingCircle :size="16" class="animate-spin" /></span></div>
               <ion-icon name="chevron-forward-outline"></ion-icon>
             </div>
         </div>
@@ -25,12 +25,20 @@
             <div><DropdownUserActivity @selectValue="getUserActivity($event)" /></div>
           </div>
           <hr class="border-t border-netral-300">
+          <div class="text-left grid grid-cols-[1fr_1fr_1fr_50px]  lg:grid-cols-[1fr_1fr_1fr_1fr_50px] xl:grid-cols-[1fr_1fr_1fr_1fr_50px] gap-4">
+            <div>#Block</div>
+            <div class="hidden xl:block lg:block md:block">#Date</div>
+            <div>#Action</div>
+            <div>#Amount</div>
+            <div></div>
+          </div>
+          <hr class="border-t border-netral-300">
           <div v-if="!loading.all || !loading.activity" class="flex flex-col gap-3">
             <a v-for="(item, index) in userData.activity" :key="index" :href="item.txHash" target="_blank" class="grid grid-cols-[1fr_1fr_1fr_50px]  lg:grid-cols-[1fr_1fr_1fr_1fr_50px] xl:grid-cols-[1fr_1fr_1fr_1fr_50px] gap-4">
                 <div>{{ item.blockId }}</div>
                 <div class="hidden xl:block lg:block md:block">{{ item.date }}</div>
                 <div>{{ item.category }}</div>
-                <div>${{ item.amount }}</div>
+                <div>${{ parseFloat(item.amount).toFixed(4) }}</div>
                 <IconsExternalLink />
             </a>
           </div>
@@ -50,7 +58,13 @@
           <div class="text-2xl">${{ totalPrizes }}</div>
         </div>
         <hr class="border-t border-netral-300">
-        <div class="flex flex-col gap-4">
+        <div class="grid grid-cols-3">
+          <div>#Round Id</div>
+          <div>#Prize</div>
+          <div></div>
+        </div>
+        <hr class="border-t border-netral-300">
+        <div v-if="userData.listWin.length > 0" class="flex flex-col gap-4">
           <div v-for="(item, index) in userData.listWin" :key="index" class="grid grid-cols-3">
             <div>#{{ item.roundId }}</div>
             <div>${{ item.prize }}</div>
@@ -58,9 +72,12 @@
               <div v-if="item.isClaimed">
                 Claimed
               </div>
-              <button v-else @click="$nuxt.$emit('showModalClaim',{ prize: item.prize, roundId: item.roundId})"  class="bg-primary-100 text-netral-500 rounded-lg py-[0.3rem] px-[0.6rem] hover:opacity-90 transition-all">Claim</button>
+              <button v-else @click="checkWinner(item.prize, item.roundId)"  class="bg-primary-100 text-netral-500 rounded-lg py-[0.3rem] px-[0.6rem] hover:opacity-90 transition-all">Claim</button>
             </div>
           </div>
+        </div>
+        <div v-else>
+          No data
         </div>
       </div>
     </div>
@@ -68,9 +85,11 @@
 </template>
 
 <script>
-import { getUserData } from '../scripts/helper'
+import { checkWinners, getUserData, showToast } from '../scripts/helper';
 const ethers = require('ethers');
-const moment = require('moment')
+const moment = require('moment');
+const listChains = require('../data/chains.json');
+
 export default {
   data(){
     const isConnect = this.$store.state.isConnected
@@ -85,7 +104,7 @@ export default {
       balance: true,
       all: true
     }
-    const urlExplorer = 'https://mumbai.polygonscan.com/tx/'
+    const urlExplorer = 'https://moonbase.moonscan.io/tx/'
     const totalPrizes = 0
     return {
       isConnect,
@@ -105,7 +124,6 @@ export default {
         await this.getDetailUser()
         await this.getUserActivity({ name: 'Deposit'});
       }
-
     }
   },
   async mounted(){
@@ -121,7 +139,7 @@ export default {
       try {
         this.loading.balance = true
         const data = await getUserData(this.$store.state.userAddress)
-        this.userData.balance = ethers.utils.formatUnits(ethers.BigNumber.from(data.balance), '6')
+        this.userData.balance = ethers.utils.formatUnits(ethers.BigNumber.from(data.balance), '18')
         this.formattedListWin(data.listWin)
         this.loading.balance = false
       } catch (error) {
@@ -134,7 +152,7 @@ export default {
       let total = ethers.BigNumber.from(0)
       this.userData.listWin = []
       const rawClaimedData = []
-      const f = await fetch(`https://api.covalenthq.com/v1/matic-mumbai/events/topics/0xb26d72f1f96f5b9982fb943039f9409789540297914dba2fdb53a3e488fd67d8/?starting-block=35894923&ending-block=latest&secondary-topics=${'0x000000000000000000000000' + this.$store.state.userAddress.slice(2)}&key=${this.$config.cKey}`, {method: 'GET'})
+      const f = await fetch(`https://api.covalenthq.com/v1/moonbeam-moonbase-alpha/events/topics/0xb26d72f1f96f5b9982fb943039f9409789540297914dba2fdb53a3e488fd67d8/?starting-block=4551680&ending-block=latest&secondary-topics=${'0x000000000000000000000000' + this.$store.state.userAddress.slice(2)}&key=${this.$config.cKey}`, {method: 'GET'})
       const d = await f.json();
       for(let i = 0; i < d.data.items.length; i++) {
         const e = ethers.utils.defaultAbiCoder.decode(
@@ -144,7 +162,7 @@ export default {
         rawClaimedData.push(e[1].toString())
       } 
       for(let i = 0; i < data.length; i++) {
-        const prize = ethers.utils.formatUnits(data[i].prize, '6')
+        const prize = ethers.utils.formatUnits(data[i].prize, '18')
         const roundId = data[i].roundId.toString()
         const isClaimed = rawClaimedData.includes(roundId)
         total = total.add(data[i].prize);
@@ -154,7 +172,7 @@ export default {
           isClaimed: isClaimed
         }]
       }
-      this.totalPrizes = ethers.utils.formatUnits(total, '6')
+      this.totalPrizes = ethers.utils.formatUnits(total, '18')
     },
     async getUserActivity(category){
       const listCategory = {
@@ -168,12 +186,12 @@ export default {
           topic: '0xb26d72f1f96f5b9982fb943039f9409789540297914dba2fdb53a3e488fd67d8'
         }
       }
+      const moonbeam = listChains.filter(item => item.name === 'Moonbeam')[0]
       this.loading.activity = true
-        fetch(`https://api.covalenthq.com/v1/matic-mumbai/events/topics/${listCategory[category.name].topic}/?starting-block=35894923&ending-block=latest&secondary-topics=${'0x000000000000000000000000' + this.$store.state.userAddress.slice(2)}&key=${this.$config.cKey}`, {method: 'GET'})
+        fetch(`https://api.covalenthq.com/v1/moonbeam-moonbase-alpha/events/topics/${listCategory[category.name].topic}/?starting-block=4551680&ending-block=latest&secondary-topics=${'0x000000000000000000000000' + this.$store.state.userAddress.slice(2)}&key=${this.$config.cKey}`, {method: 'GET'})
         .then(async (resp) => await resp.json())
         .then(async (data) => {
-          console.log(data)
-          await this.formattedDataUser(data.data.items, category.name)
+          await this.formattedDataUser(data.data.items.filter(item => item.sender_address === moonbeam.contractAddress.toLowerCase()), category.name)
           this.loading.activity = false
         }); 
     },
@@ -184,13 +202,22 @@ export default {
           ['string', 'uint256', 'uint256'],
           data[i].raw_log_data
         )
+
         this.userData.activity.push({
           blockId: '#' + data[i].block_height,
           date: moment(data[i].block_signed_at).format('LL'),
           category: category,
-          amount: ethers.utils.formatUnits(e[2], 6),
+          amount: ethers.utils.formatUnits(e[2], e[0] === 'Moonbeam' ? 18 : 6),
           txHash : this.urlExplorer + data[i].tx_hash
         })
+      }
+    },
+    async checkWinner(prize, roundId) {
+      const isWinner = await checkWinners(roundId)
+      if(isWinner) {
+        this.$nuxt.$emit('showModalClaim',{ prize: prize, roundId: roundId})
+      } else {
+        showToast(`You have claimed the prize for round #${roundId}`)
       }
     }
   }

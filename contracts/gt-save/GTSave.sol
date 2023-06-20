@@ -57,7 +57,6 @@ contract GTSave is AxelarExecutable, ReentrancyGuard, Ownable {
   event _withdraw(address indexed _from, string _fromChain, uint256 _roundId, uint256 _amount );
   event _claim(address indexed _from, string _fromChain, uint256 _roubndId, uint256 _amount);
   event _winner(address indexed _from, uint256 indexed _roundId, uint256 prize);
-  event _testing(uint256 _balance, uint256 _underlying);
 
   constructor(
     address _gateway, 
@@ -131,7 +130,7 @@ contract GTSave is AxelarExecutable, ReentrancyGuard, Ownable {
 
     totalDeposit += amount;
     
-    if(userData[msg.sender].isEntity){
+    if(userData[msg.sender].isEntity && userData[msg.sender].balance > 0 ){
       userData[msg.sender].balance += amount;
     } else {
       userData[msg.sender].isEntity = true;
@@ -145,7 +144,7 @@ contract GTSave is AxelarExecutable, ReentrancyGuard, Ownable {
     usdc.approve(address(iPool), amount);
     iPool.mint(amount);
 
-    emit _deposit(msg.sender, 'Polygon', roundId, amount);
+    emit _deposit(msg.sender, 'Moonbeam', roundId, amount);
   }
 
   function withdraw(uint256 amount) external userExist(msg.sender) nonReentrant {
@@ -163,7 +162,7 @@ contract GTSave is AxelarExecutable, ReentrancyGuard, Ownable {
 
     usdc.transfer(msg.sender, amount);
 
-    emit _withdraw(msg.sender, 'Polygon', roundId, amount);
+    emit _withdraw(msg.sender, 'Moonbeam', roundId, amount);
   }
 
   function claim(uint256 _roundId) external validWinner(_roundId, msg.sender) nonReentrant {
@@ -172,7 +171,7 @@ contract GTSave is AxelarExecutable, ReentrancyGuard, Ownable {
     delete winners[_roundId];
     usdc.transfer(msg.sender, prize);
 
-    emit _claim(msg.sender, 'Polygon', _roundId, prize);
+    emit _claim(msg.sender, 'Moonbeam', _roundId, prize);
   }
 
   function receiveAndDeposit(address user, uint256 amount) internal {
@@ -181,7 +180,7 @@ contract GTSave is AxelarExecutable, ReentrancyGuard, Ownable {
 
     totalDeposit += amount.mul(1e12);
 
-    if(userData[user].isEntity){
+    if(userData[user].isEntity && userData[user].balance > 0){
       userData[user].balance += amount.mul(1e12);
     } else {
       userData[user].isEntity = true;
@@ -247,6 +246,7 @@ contract GTSave is AxelarExecutable, ReentrancyGuard, Ownable {
     });
   
     callBridge(axlCallWithToken);
+    emit _claim(paramClaimPrize.user, 'Moonbeam', paramClaimPrize.roundId, prize);
   }
 
   function callBridge(
@@ -306,7 +306,6 @@ contract GTSave is AxelarExecutable, ReentrancyGuard, Ownable {
             tokenSymbol: axlUSDC
           });
           receiveAndClaimPrize(paramClaimPrize);
-          emit _claim(args.user, sourceChain, args.roundId, args.amount);
         }
     }
 

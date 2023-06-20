@@ -15,7 +15,7 @@
             Your Balance
           </div>
           <div class="text-[3.5rem]">
-            ${{ balance }}
+            ${{ parseFloat(balance).toFixed(4) }}
           </div> 
           <hr class="border-t border-netral-300 " />
           <div class="grid gap-5 my-5">
@@ -25,7 +25,7 @@
             </div>
             <div class="flex justify-between align-center">
               <div>Yield Souce</div>
-              <div class="flex gap-2"><LogosAAVE />AAVE V3 Polygon</div>
+              <div class="flex items-center gap-2"><img src="/images/moonwell.png" width="24px" />Moonwell Artemis</div>
             </div>
           </div>
           <hr class="border-t border-netral-300" />
@@ -37,9 +37,9 @@
           <div class="grid gap-4" v-else>
             <div class="flex gap-2 items-center justify-center">Withdraw <LogosUsdc /></div>
             <input :disabled="loading.withdraw" class="bg-transparent outline-0 text-center text-[2rem] lg:text-[3rem] xl:text-[4rem] w-full" pattern="^[0-9]*[.,]?[0-9]*$" placeholder="0.0" type="number" inputmode="decimal" min="0" v-model="amountWithdraw">
-            <div>Balance: ${{ balance }} <span @click="amountWithdraw = balance" class="cursor-pointer underline">Max</span></div>
+            <div>Balance: ${{ parseFloat(balance).toFixed(6) }} <span @click="amountWithdraw = balance" class="cursor-pointer underline">Max</span></div>
             <hr class="border-t border-netral-300">
-            <div v-if="selectedChain[0].name !== 'Polygon'" class="flex justify-between items-center text-sm">
+            <div v-if="selectedChain[0].name !== 'Moonbeam'" class="flex justify-between items-center text-sm">
               <div class="flex gap-2 items-center">Estimated Gas Fee 
                 <div class='has-tooltip'>
                   <span class='tooltip rounded shadow-lg p-1 bg-netral-600 text-xs ml-5 -mt-8'>
@@ -53,17 +53,17 @@
             <div class="flex justify-between">
               <div class="text-sm">Order routing</div>
               <div class="flex items-center">
-                <template v-if="selectedChain[0].name === 'Polygon'">
+                <template v-if="selectedChain[0].name === 'Moonbeam'">
                   <div class="bg-netral-100 w-[18px] h-[18px] rounded-full"></div>
                   <div>----</div>
-                  <LogosPolygon :size="18" pattern="pattern-deposit-2" />
+                  <LogosMoonbeam :size="18" pattern="pattern-deposit-2" />
                 </template>
                 <template  v-else>
                   <div class="bg-netral-100 w-[18px] h-[18px] rounded-full"></div>
                   <div>----</div>
                   <component :is="selectedChain[0].logo" :size="18" pattern="pattern-deposit-1" />
                   <div>----</div>
-                  <LogosPolygon :size="18" pattern="pattern-deposit-2" />
+                  <LogosMoonbeam :size="18" pattern="pattern-deposit-2" />
                   <div>----</div>
                   <component :is="selectedChain[0].logo" :size="18" pattern="pattern-deposit-1" />
                 </template>
@@ -83,7 +83,7 @@
              <div class="text-center">
                 <div class="text-lg my-5">Transaction Submitted</div>
                 <div class="opacity-50 text-sm">Your withdraw success to submitted,</div>
-                <div class="opacity-50 text-sm">check your history for status your deposit</div>
+                <div class="opacity-50 text-sm">If the transaction is success and you are doing cross-chain message, you can also track it on <a href="https://testnet.axelarscan.io/gmp/search" target="_blank" class="underline">axelarscan</a></div>
                 <div @click="viewBlockExplorer()" class="my-5 flex gap-3 text-netral-500 hover:opacity-90 justify-center bg-primary-100 rounded-lg p-[0.75rem] cursor-pointer">
                   View your withdraw 
                   <IconsExternalLink :color="'black'" />
@@ -100,6 +100,7 @@
 </template>
 
 <script>
+import { sleep } from '@axelar-network/axelarjs-sdk';
 import { 
   getTotalDeposit,
   getFeeAxelarTwoWay,
@@ -161,10 +162,10 @@ export default {
     },
     amountWithdraw: function(newV) {
       if(newV) {
-        if(newV === 0) {
+        if(parseFloat(newV) <= 0) {
           this.error.isError = true
           this.error.message = 'Withdraw'
-        } else if(ethers.utils.parseUnits(`${this.balance}`, '6').gte(ethers.utils.parseUnits(`${newV}`, '6'))) {
+        } else if(ethers.utils.parseUnits(`${this.balance}`,  '18').gte(ethers.utils.parseUnits(`${newV}`, '18'))) {
           this.error.isError = false,
           this.error.message = ''
         } else {
@@ -178,17 +179,22 @@ export default {
       
     }
   },
+  computed: {
+    isMoonbeam(){
+      return this.selectedChain[0].name === 'Moonbeam'
+    }
+  },
   async mounted(){
     this.totalDeposit = await getTotalDeposit()
   },
   methods: {
     viewBlockExplorer(){
-      const url = this.selectedChain[0].name === 'Polygon' ? this.mumbaiExplorer : this.axelarExplorer
+      const url = this.selectedChain[0].block_explorer + 'tx/'
       window.open(url + this.txHash, '_blank')
     },
     async estimateGas(){
       this.loading.fee = true
-      if(this.$store.state.chainId !== 80001) {
+      if(this.$store.state.chainId !== 1287) {
         this.fee.axelarFee = await getFeeAxelarTwoWay(this.selectedChain)
       }
       this.loading.fee = false
@@ -197,16 +203,19 @@ export default {
       this.loading.withdraw = true
       let tx;
       try {
-        if(this.selectedChain[0].name === 'Polygon'){
-          tx = await withdrawOnPolygon(ethers.utils.parseUnits(this.amountWithdraw, '6'))
+        if(this.selectedChain[0].name === 'Moonbeam'){
+          tx = await withdrawOnPolygon(ethers.utils.parseUnits(this.amountWithdraw, '18'))
         } else {
-          tx = await withdrawOthers(this.selectedChain,ethers.utils.parseUnits(this.amountWithdraw, '6'), ethers.utils.parseEther(this.fee.axelarFee))
+          let amount = parseFloat(this.amountWithdraw)
+          amount = Math.floor(amount * 1e6) / 1e6
+          tx = await withdrawOthers(this.selectedChain,ethers.utils.parseUnits(amount.toString(), '6'), ethers.utils.parseEther(this.fee.axelarFee))
         }
-        const receipt = await tx.wait();
-        this.txHash = receipt.transactionHash
+        await sleep(2)
+        this.txHash = tx.hash
         this.loading.withdraw = false
         this.isFinish = true
       } catch (error) {
+        console.log(error)
         console.log('rejected by user');
         this.loading.withdraw = false
       }

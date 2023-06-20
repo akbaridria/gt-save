@@ -10,10 +10,10 @@
             <div class="flex justify-end">
               <ion-icon @click="$emit('closeModal')" class="text-lg cursor-pointer" name="close-outline"></ion-icon>
             </div>
-            <div>Claim #{{ roundId }}</div>
-            <div class="text-[3.5rem]"> {{ prize }}</div>
+            <div>Claim Round Id #{{ roundId }}</div>
+            <div class="text-[3.5rem]"> ${{ parseFloat(prize).toFixed(6) }}</div>
             <hr class="border-t border-netral-300">
-            <div v-if="selectedChain[0].name !== 'Polygon'" class="flex justify-between">
+            <div v-if="selectedChain[0].name !== 'Moonbeam'" class="flex justify-between">
               <div class="flex gap-2 items-center">Estimated Gas Fee 
                 <div class='has-tooltip'>
                   <span class='tooltip rounded shadow-lg p-1 bg-netral-600 text-xs ml-5 -mt-8'>
@@ -31,17 +31,17 @@
             <div class="flex justify-between">
               <div class="text-sm">Order routing</div>
               <div class="flex items-center">
-                <template v-if="selectedChain[0].name === 'Polygon'">
+                <template v-if="selectedChain[0].name === 'Moonbeam'">
                   <div class="bg-netral-100 w-[18px] h-[18px] rounded-full"></div>
                   <div>----</div>
-                  <LogosPolygon :size="18" pattern="pattern-deposit-2" />
+                  <LogosMoonbeam :size="18" pattern="pattern-deposit-2" />
                 </template>
                 <template  v-else>
                   <div class="bg-netral-100 w-[18px] h-[18px] rounded-full"></div>
                   <div>----</div>
                   <component :is="selectedChain[0].logo" :size="18" pattern="pattern-deposit-1" />
                   <div>----</div>
-                  <LogosPolygon :size="18" pattern="pattern-deposit-2" />
+                  <LogosMoonbeam :size="18" pattern="pattern-deposit-2" />
                   <div>----</div>
                   <component :is="selectedChain[0].logo" :size="18" pattern="pattern-deposit-1" />
                 </template>
@@ -79,6 +79,7 @@
 </template>
 
 <script>
+import { sleep } from '@axelar-network/axelarjs-sdk';
 import { 
   claimOnPolygon,
   claimOthersOthers,
@@ -122,7 +123,7 @@ export default {
     }
   },
   async mounted(){
-    if(this.selectedChain[0].name !== 'Polygon') {
+    if(this.selectedChain[0].name !== 'Moonbeam') {
       this.loading = true
       await this.getEstimatedFeeAxelar()
       this.loading = false
@@ -130,7 +131,7 @@ export default {
   },
   methods: {
     viewBlockExplorer(){
-      const url = this.selectedChain[0].name === 'Polygon' ? this.mumbaiExplorer : this.axelarExplorer
+      const url = this.selectedChain[0].block_explorer + 'tx/'
       window.open(url + this.txHash, '_blank')
     },
     async getEstimatedFeeAxelar() {
@@ -141,13 +142,13 @@ export default {
       this.loadingClaim = true
       let tx;
       try {
-        if(this.selectedChain[0].name === 'Polygon') {
+        if(this.selectedChain[0].name === 'Moonbeam') {
           tx = await claimOnPolygon(ethers.BigNumber.from(this.roundId));
         } else {
           tx = await claimOthersOthers( this.selectedChain, ethers.BigNumber.from(this.roundId), ethers.utils.parseUnits(this.axelarFee))
         }
-        const receipt = await tx.wait();
-        this.txHash = receipt.transactionHash
+        await sleep(2)
+        this.txHash = tx.hash
         this.loadingClaim = false
         this.isFinish = true
       } catch (error) {

@@ -102,6 +102,7 @@
 </template>
 
 <script>
+import { sleep } from '@axelar-network/axelarjs-sdk';
 const listChains = require('../../data/chains.json');
 import {
   estimateBatchDeposit,
@@ -200,6 +201,7 @@ export default {
       let tx;
       try {
         tx = await depositOthers(this.selectedChain, this.amount * 1e6, ethers.utils.parseEther(this.axelarFee))
+        await sleep(2)
         this.depositHash = tx.hash
         this.loading = false
         this.isFinish = true
@@ -213,6 +215,7 @@ export default {
       try {
         this.loading = true
         tx = await batchDeposit(ethers.utils.parseEther(this.amount))
+        await sleep(2)
         this.depositHash = tx.hash
         this.loading = false
         this.isFinish = true
