@@ -19,15 +19,21 @@ GTSave utilizes Moonwell Artemis on Moonbeam as the yield source for generating 
 
 ## Supported Networks (testnet) and Contract Addresses
 
-| Network            | <code style="font-size: 80%;">Contract Address</code>                                    | (a)USDC                                     |
+| Network            | Contract Address                                    | (a)USDC                                     |
 |--------------------|-----------------------------------------------------|---------------------------------------------|
-| <code style="font-size: 60%;">Moonbase Alpha</code>     | <code style="font-size: 80%;">0x31Ed4dC6A4F467ff421bdA90D04D8258441fA9A5</code>          | <code style="font-size: 80%;">0x3799D95Ee109129951c6b31535b2B5AA6dbF108c</code>  |
-| <code style="font-size: 60%;">Polygon Mumbai</code>     | <code style="font-size: 80%;">0x4CAf1e27dddE4332780173a56D449eb91070529a</code>          | <code style="font-size: 80%;">0x2c852e740B62308c46DD29B982FBb650D063Bd07</code>  |
-| <code style="font-size: 60%;">Avalanche Fuji</code>     | <code style="font-size: 80%;">0x105BDE054001bC1bf9f9D00b15e9Cd9A1AA765D8</code>          | <code style="font-size: 80%;">0x57F1c63497AEe0bE305B8852b354CEc793da43bB</code>  |
-| <code style="font-size: 60%;">BSC testnet</code>        | <code style="font-size: 80%;">0x2aF20b65859513B08f932F514f9df8D0D7141f7E</code>          | <code style="font-size: 80%;">0xc2fA98faB811B785b81c64Ac875b31CC9E40F9D2</code>  |
-| <code style="font-size: 60%;">Fantom testnet</code>     | <code style="font-size: 80%;">0x9ed7ea38A0B2Ec142c11f0a156a5d69C6BDfB7ec</code>          | <code style="font-size: 80%;">0x75Cc4fDf1ee3E781C1A3Ee9151D5c6Ce34Cf5C61</code>  |
-| <code style="font-size: 60%;">Aurora testnet</code>     | <code style="font-size: 80%;">0xBEEC84181eC923C0D700DFBCF923b9867cba98D0</code>          | <code style="font-size: 80%;">0xFfB4749710EC6286b3A0dC2F24165DA622dA2ff5</code>  |
-| <code style="font-size: 60%;">Celo alfajores</code>     | <code style="font-size: 80%;">0x0cC17bB27A6ecaa973EbcB45c1d355e70284008a</code>          | <code style="font-size: 80%;">0x254d06f33bDc5b8ee05b2ea472107E300226659A</code>
+| Moonbase Alpha     | 0x31Ed4dC6A4F467ff421bdA90D04D8258441fA9A5          | 0x3799D95Ee109129951c6b31535b2B5AA6dbF108c  |
+| Polygon Mumbai     | 0x4CAf1e27dddE4332780173a56D449eb91070529a          | 0x2c852e740B62308c46DD29B982FBb650D063Bd07  |
+| Avalanche Fuji     | 0x105BDE054001bC1bf9f9D00b15e9Cd9A1AA765D8          | 0x57F1c63497AEe0bE305B8852b354CEc793da43bB  |
+| BSC testnet        | 0x2aF20b65859513B08f932F514f9df8D0D7141f7E          | 0xc2fA98faB811B785b81c64Ac875b31CC9E40F9D2  |
+| Fantom testnet     | 0x9ed7ea38A0B2Ec142c11f0a156a5d69C6BDfB7ec          | 0x75Cc4fDf1ee3E781C1A3Ee9151D5c6Ce34Cf5C61  |
+| Aurora testnet     | 0xBEEC84181eC923C0D700DFBCF923b9867cba98D0          | 0xFfB4749710EC6286b3A0dC2F24165DA622dA2ff5  |
+| Celo alfajores     | 0x0cC17bB27A6ecaa973EbcB45c1d355e70284008a          | 0x254d06f33bDc5b8ee05b2ea472107E300226659A  |
+| Arbitrum testnet   | 0xECf71718B5fEF085cC29F87045b03411c6E1707C          | 0x254d06f33bDc5b8ee05b2ea472107E300226659A  |
+| Optimism testnet   | 0x12aaA99572B037b893Cb37D06d42c28a87AaAC37          | 0x254d06f33bDc5b8ee05b2ea472107E300226659A  |
+| Base testnet       | 0x2a97437d90b2fCF7B7aA8eEB72488A6B8D79703A          | 0x254d06f33bDc5b8ee05b2ea472107E300226659A  |
+| Ethereumn goerli   | 0x2266677D9d85064f8d37c4a0C9c1f158DBFd611e          | 0x254d06f33bDc5b8ee05b2ea472107E300226659A  |
+| Linea testnet      | 0xfBf8C14e57EFce2cDafd4a9c30930310ABeb4aB6          | 0x254d06f33bDc5b8ee05b2ea472107E300226659A  |
+
 
 
 
@@ -35,7 +41,7 @@ GTSave utilizes Moonwell Artemis on Moonbeam as the yield source for generating 
 
 | Network            | VRF Consumer                                |
 |--------------------|---------------------------------------------|
-| <code style="font-size: 60%;">Moonbase Alpha</code>     | <code style="font-size: 80%;">0x84822083f91E04D31Ee67C5bC36dd2AD59215Aa7</code>  |
+| Moonbase Alpha     | 0x84822083f91E04D31Ee67C5bC36dd2AD59215Aa7  |
 
 ## Roadmap
 
