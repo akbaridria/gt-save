@@ -113,7 +113,8 @@ import {
   approveTx,
   depositOnPolygon,
   depositOthers,
-  batchDeposit
+  batchDeposit,
+  showToast
 } from '../../scripts/helper';
 const ethers = require('ethers');
 
@@ -189,6 +190,7 @@ export default {
       try {
         this.loading = true
         await approveTx(this.selectedChain, this.amount * 1e6)
+        showToast('Approve Transaction Success!', 'rgba(8, 56, 12)')
         await this.initDeposit();
         this.loading = false
       } catch (error) {

@@ -19,7 +19,7 @@
 
         <div class="flex gap-3">
           <div class="flex items-center px-[0.4rem]">
-            <div class="bg-red-600 rounded-lg text-white p-[0.25rem] text-sm">testnet</div>
+            <div @click="$emit('openModalFaucet')" class="hidden cursor-pointer transition-all sm:block bg-primary-100 py-1 px-4 rounded-lg text-netral-300 hover:opacity-90">Faucet</div>
           </div>
           <DropdownChains v-show="isConnected" @changeNetwork="$emit('changeNetwork', $event)" />
           <div @click="$emit('connect')" v-if="!isConnected" class="border-[1px] border-netral-300 p-[0.4375rem] rounded-lg flex gap-2 items-center cursor-pointer hover:bg-netral-600">

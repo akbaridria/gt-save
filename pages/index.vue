@@ -1,6 +1,6 @@
 <template>
   <div>
-    <section class="max-h-screen h-[900px] flex flex-col gap-10 justify-center relative z-10">
+    <section class="min-h-[800px] py-[10rem] h-screen flex flex-col gap-10 justify-center relative z-10">
       <video src="images/3d-coin.mp4" autoplay loop autobuffer muted playsinline class="absolute top-0 z-0 max-h-screen h-[900px] w-full"/>
       <div class="text-[2rem] lg:text-[4.5rem] md:text-[3rem] xl:text-[4rem] font-bold relative z-10">
         <div>CROSS-CHAIN</div>
@@ -22,7 +22,7 @@
       </div>
     </section>
 
-    <section class="max-h-screen h-[900px] flex flex-col items-center justify-center gap-[2rem]">
+    <section class="min-h-[800px] py-[10rem] h-screen flex flex-col items-center justify-center gap-[2rem]">
       <div class="text-lg"><span class="text-primary-100">Hundreds of Prizes.</span> Every. Week.</div>
       <div class="text-[3rem] lg:text-[7rem] md:text-[6rem] xl:text-[9rem] text-primary-100 xl:leading-[8rem]">${{ prize }}</div>
       <div>Interest Generated on Draw <span class="font-bold">#{{ roundId }}</span>. And still counting...</div>
@@ -60,17 +60,17 @@
         </div>
       </div>
       <div class="p-5 grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-5">
-        <component v-for="(item, index) in cryptoImages" :key="index" :is="item.logo" :size="80" class="grayscale hover:grayscale-0 transition-all" />
+        <component v-for="(item, index) in cryptoImages" :key="index" :is="item.logo" size="60" class="grayscale hover:grayscale-0 transition-all" />
       </div>
     </section>
 
-    <section class="py-[7rem]">
-      <div class="grid lg:grid-cols-3 xl:grid-cols-3 gap-5">
-        <div v-for="(item, index) in articles" :key="index" class="border-[1px] border-netral-300 p-3 rounded-sm grid gap-4">
-          <img :src="`images/${item.image}`" class="rounded" alt="">
-          <div class="line-clamp-1">{{ item.title }}</div>
-          <div class="line-clamp-3">{{ item.description }}</div>
-          <a :href="item.link" target="_blank" class="flex gap-2 items-center"> Read <IconsExternalLink /></a>
+    <section class="py-[10rem] max-w-[1200px] mx-auto">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 ">
+        <div class="text-[3.2rem] font-bold">
+          Frequenly Asked <br> Questions
+        </div>
+        <div class="grid gap-3">
+          <Accordion v-for="(item, index) in listFaq()" :key="index" :question="item.question" :answer="item.answer" />
         </div>
       </div>
     </section>
@@ -78,7 +78,7 @@
 </template>
 
 <script>
-import { getCountDown, getPrize, getRound } from '../scripts/helper'
+import { getCountDown, getPrize, getRound, listFaq } from '../scripts/helper'
 const moment = require('moment');
 
 export default {
@@ -120,7 +120,7 @@ export default {
       countDown,
       intervalId,
       prize,
-      roundId
+      roundId,
     }
   },
   async mounted(){
@@ -133,6 +133,7 @@ export default {
     clearInterval(this.intervalId)
   },
   methods: {
+    listFaq,
     formattedCountDown(end) {
       const n = moment().unix();
       const diff = end - n;

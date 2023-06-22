@@ -362,7 +362,10 @@ export const checkWinners = async (roundId) => {
   return winner.isEntity;
 };
 
-export const showToast = (text = "This is a toast") => {
+export const showToast = (
+  text = "This is a toast",
+  bg = "rgb(220, 38, 38)"
+) => {
   Toastify({
     text: text,
     duration: 3000,
@@ -371,7 +374,51 @@ export const showToast = (text = "This is a toast") => {
     position: "right",
     stopOnFocus: true,
     style: {
-      background: "rgb(220, 38, 38)",
+      background: bg,
     },
   }).showToast();
+};
+
+export const faucetUsdc = async (user) => {
+  const moonbeam = chains.filter((item) => item.name === "Moonbeam")[0];
+  const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+  const signer = provider.getSigner();
+  const contract = new ethers.Contract(moonbeam.usdc, erc20.abi, signer);
+  const tx = await contract.allocateTo(user, ethers.utils.parseEther("100"));
+  return tx;
+};
+
+export const listFaq = () => {
+  return [
+    {
+      question: "What is GTSave?",
+      answer:
+        "GTSave is a decentralized cross-chain savings protocol that allows users to save and earn rewards through fair and transparent drawings. It is built on the combination of Axelar GMP and API3 rqng, providing a secure and exciting experience for participants.",
+    },
+    {
+      question: "How does GTSave earn interest?",
+      answer:
+        "GTSave generates interest through the utilization of Moonwell Artemis on Moonbeam. This integration serves as the yield source, enabling the platform to generate rewards for users' savings.",
+    },
+    {
+      question: "When does GTSave pick the winner?",
+      answer:
+        "GTSave selects the winner through a weekly drawing. The specific date and time of the drawing are predetermined and communicated to the participants.",
+    },
+    {
+      question: "How does GTSave pick the winner?",
+      answer:
+        "GTSave utilizes the API3 QRNG (Quantum Random Number Generator) to ensure a fair and transparent selection of the winner. When it's time to determine the winner of the weekly drawing, GTSave sends a request to the API3 QRNG to obtain a random number. This random number serves as the basis for selecting the winner from among the participants. Since the API3 QRNG is a trusted and secure source of random numbers, it helps prevent any manipulation or bias in the winner selection process.",
+    },
+    {
+      question: "Is GTSave fair and transparent?",
+      answer:
+        "Absolutely! GTSave is committed to ensuring fairness and transparency throughout its operations. The platform takes several measures to uphold these principles. Firstly, the winner selection process is conducted using a trusted and secure source of random numbers, such as the API3 QRNG. This helps to eliminate any biases or manipulation in choosing the winner.",
+    },
+    {
+      question: "Is there any lock period on GTSave?",
+      answer:
+        "No, GTSave does not impose any lock period on users' assets. Participants have full control over their deposited funds, allowing them to deposit, withdraw, or claim the prize whenever they desire. The absence of a lock period provides flexibility and liquidity for users' assets",
+    },
+  ];
 };

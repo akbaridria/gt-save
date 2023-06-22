@@ -1,5 +1,5 @@
 <template>
-  <div class="pt-[8rem] pb-[35vh] relative z-50">
+  <div class="pt-[10rem] pb-[35vh] relative z-50">
     <div v-if="!isConnect" class="flex flex-col gap-4 items-center">
       <IconsWallet />
       <div class="text-2xl">Prize savings for humans</div>

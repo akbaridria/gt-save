@@ -1,10 +1,14 @@
 <template>
   <div class="min-h-screen w-screen bg-netral-500 text-white">
+    <div class="fixed bottom-0 text-sm right-0 px-4 py-2 bg-red-600 rounded-tl-lg z-[1000]">
+      We are on testnet!
+    </div>
     <img src="images/light.png" class="absolute z-[50] top-0 right-0" alt="">
-    <Header @connect="connectWallet($event)" @changeNetwork="switchWallet($event)" />
+    <Header @connect="connectWallet($event)" @changeNetwork="switchWallet($event)" @openModalFaucet="openModalFaucet = true" />
     <ModalDeposit v-if="openModal" @closeModal="openModal = false" :amount="amountDeposit" />
     <ModalAccount v-if="openModalAccount" @closeModal="openModalAccount = false" :balance="userBalance" />
-    <ModalClaim v-if="openModalClaim" @closeModal="openModalClaim = false" :prize="userPrize" :roundId="claimRoundId" />
+    <ModalClaim v-if="openModalClaim" @closeModal="openModalClaim = false" :prize="userPrize" :roundId="claimRoundId"  />
+    <ModalFaucet v-if="openModalFaucet" @closeModal="openModalFaucet = false" @switchWallet="switchWallet($event)" @connectWallet="connectWallet($event)"/>
     <div class="container px-4 min-h-screen mx-auto relative">
       <div>
         <Nuxt />
@@ -27,6 +31,7 @@ export default {
     const userPrize = 0
     const openModalClaim = false
     const claimRoundId = 0
+    const openModalFaucet = false
     return {
       openModal,
       amountDeposit,
@@ -34,7 +39,8 @@ export default {
       userBalance,
       openModalClaim,
       userPrize,
-      claimRoundId
+      claimRoundId,
+      openModalFaucet
     }
   },
   async mounted(){
@@ -61,14 +67,19 @@ export default {
     this.$nuxt.$on('showModal', ($event) => this.showModal($event))
     this.$nuxt.$on('showModalAccount', ($event) => this.showModalAccount($event))
     this.$nuxt.$on('showModalClaim', ($event) => this.showModalClaim($event))
+    this.$nuxt.$on('showModalFaucet', ($event) => this.showModalFaucet($event))
   },
   beforeDestroy() {
     this.$nuxt.$off('connectWallet', ($event) => this.connectWallet($event))
     this.$nuxt.$off('showModal', ($event) =>  this.showModal($event))
     this.$nuxt.$off('showModalAccount', ($event) => this.showModalAccount($event))
     this.$nuxt.$off('showModalClaim', ($event) => this.showModalClaim($event))
+    this.$nuxt.$off('showModalFaucet', ($event) => this.showModalFaucet($event))
   },
   methods: {
+    showModalFaucet() {
+      this.openModalFaucet = true;
+    },
     showModalClaim(data) {
       this.claimRoundId = data.roundId
       this.userPrize = data.prize

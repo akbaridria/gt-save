@@ -20,9 +20,7 @@
         "decimals": 18,
         "symbol": "DEV"
       },
-      "rpcUrls": [
-        "https://rpc.api.moonbase.moonbeam.network"
-      ]
+      "rpcUrls": ["https://rpc.api.moonbase.moonbeam.network"]
     },
     "fee": "moonbeam",
     "symbol": "DEV",
@@ -35,7 +33,7 @@
     "rpc": "https://rpc-mumbai.maticvigil.com",
     "gateway": "0xBF62ef1486468a6bd26Dd669C06db43dEd5B849B",
     "gasReceiver": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6",
-    "contractAddress": "0x283ABc5B3544c4c3Dd5F17898777Da8b519fD0aE",
+    "contractAddress": "0x4CAf1e27dddE4332780173a56D449eb91070529a",
     "aToken": "0x9daBC9860F8792AeE427808BDeF1f77eFeF0f24E",
     "usdc": "0xe9DcE89B076BA6107Bb64EF30678efec11939234",
     "poolUsdc": "0x0b913A76beFF3887d35073b8e5530755D60F78C7",
@@ -54,9 +52,7 @@
         "decimals": 18,
         "symbol": "MATIC"
       },
-      "rpcUrls": [
-        "https://polygon-rpc.com/"
-      ]
+      "rpcUrls": ["https://polygon-rpc.com/"]
     },
     "fee": "polygon",
     "symbol": "MATIC",
@@ -80,9 +76,7 @@
         "decimals": 18,
         "symbol": "AVAX"
       },
-      "rpcUrls": [
-        "https://api.avax-test.network/ext/bc/C/rpc"
-      ]
+      "rpcUrls": ["https://api.avax-test.network/ext/bc/C/rpc"]
     },
     "fee": "avalanche",
     "symbol": "AVAX",
@@ -94,7 +88,7 @@
     "rpc": "https://bsc-testnet.public.blastapi.io",
     "gateway": "0x4D147dCb984e6affEEC47e44293DA442580A3Ec0",
     "gasReceiver": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6",
-    "contractAddress": "0x0a3B94b93395095204aa5c09330eC1b38bc4EE77",
+    "contractAddress": "0x2aF20b65859513B08f932F514f9df8D0D7141f7E",
     "axlToken": "0xc2fA98faB811B785b81c64Ac875b31CC9E40F9D2",
     "isEtherscan": true,
     "logo": "LogosBsc",
@@ -106,9 +100,7 @@
         "decimals": 18,
         "symbol": "BNB"
       },
-      "rpcUrls": [
-        "https://bsc-testnet.public.blastapi.io"
-      ]
+      "rpcUrls": ["https://bsc-testnet.public.blastapi.io"]
     },
     "fee": "binance",
     "symbol": "BNB",
@@ -120,7 +112,7 @@
     "rpc": "https://rpc.testnet.fantom.network",
     "gateway": "0x97837985Ec0494E7b9C71f5D3f9250188477ae14",
     "gasReceiver": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6",
-    "contractAddress": "0xBEEC84181eC923C0D700DFBCF923b9867cba98D0",
+    "contractAddress": "0x9ed7ea38A0B2Ec142c11f0a156a5d69C6BDfB7ec",
     "axlToken": "0x75Cc4fDf1ee3E781C1A3Ee9151D5c6Ce34Cf5C61",
     "isEtherscan": true,
     "logo": "LogosFantom",
@@ -132,9 +124,7 @@
         "decimals": 18,
         "symbol": "FTM"
       },
-      "rpcUrls": [
-        "https://rpc.testnet.fantom.network"
-      ]
+      "rpcUrls": ["https://rpc.testnet.fantom.network"]
     },
     "fee": "fantom",
     "symbol": "FTM",
@@ -146,7 +136,7 @@
     "rpc": "https://testnet.aurora.dev",
     "gateway": "0x304acf330bbE08d1e512eefaa92F6a57871fD895",
     "gasReceiver": "0xA2C84547Db9732B27D45c06218DDAEFcc71e452D",
-    "contractAddress": "0x12aaA99572B037b893Cb37D06d42c28a87AaAC37",
+    "contractAddress": "0xBEEC84181eC923C0D700DFBCF923b9867cba98D0",
     "axlToken": "0xFfB4749710EC6286b3A0dC2F24165DA622dA2ff5",
     "isEtherscan": false,
     "logo": "LogosAurora",
@@ -158,9 +148,7 @@
         "decimals": 18,
         "symbol": "ETH"
       },
-      "rpcUrls": [
-        "https://testnet.aurora.dev"
-      ]
+      "rpcUrls": ["https://testnet.aurora.dev"]
     },
     "fee": "aurora",
     "symbol": "aETH",
@@ -172,7 +160,7 @@
     "rpc": "https://alfajores-forno.celo-testnet.org",
     "gateway": "0xe432150cce91c13a887f7D836923d5597adD8E31",
     "gasReceiver": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6",
-    "contractAddress": "0x2aF20b65859513B08f932F514f9df8D0D7141f7E",
+    "contractAddress": "0x0cC17bB27A6ecaa973EbcB45c1d355e70284008a",
     "axlToken": "0x254d06f33bDc5b8ee05b2ea472107E300226659A",
     "isEtherscan": true,
     "logo": "LogosCelo",
@@ -184,9 +172,7 @@
         "decimals": 18,
         "symbol": "CELO"
       },
-      "rpcUrls": [
-        "https://alfajores-forno.celo-testnet.org"
-      ]
+      "rpcUrls": ["https://alfajores-forno.celo-testnet.org"]
     },
     "fee": "celo",
     "symbol": "CELO",
@@ -198,7 +184,7 @@
     "rpc": "https://goerli-rollup.arbitrum.io/rpc",
     "gateway": "0xe432150cce91c13a887f7D836923d5597adD8E31",
     "gasReceiver": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6",
-    "contractAddress": "0x0cC17bB27A6ecaa973EbcB45c1d355e70284008a",
+    "contractAddress": "0xECf71718B5fEF085cC29F87045b03411c6E1707C",
     "axlToken": "0x254d06f33bDc5b8ee05b2ea472107E300226659A",
     "isEtherscan": true,
     "logo": "LogosArbitrum",
@@ -210,9 +196,7 @@
         "decimals": 18,
         "symbol": "AGOR"
       },
-      "rpcUrls": [
-        "https://goerli-rollup.arbitrum.io/rpc"
-      ]
+      "rpcUrls": ["https://goerli-rollup.arbitrum.io/rpc"]
     },
     "fee": "arbitrum",
     "symbol": "ETH",
@@ -224,7 +208,7 @@
     "rpc": "https://goerli.optimism.io",
     "gateway": "0xe432150cce91c13a887f7D836923d5597adD8E31",
     "gasReceiver": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6",
-    "contractAddress": "0x0C24805507556313f0C3633558fc5e5A9dAE1d36",
+    "contractAddress": "0x12aaA99572B037b893Cb37D06d42c28a87AaAC37",
     "axlToken": "0x254d06f33bDc5b8ee05b2ea472107E300226659A",
     "isEtherscan": true,
     "logo": "LogosOptimism",
@@ -236,9 +220,7 @@
         "decimals": 18,
         "symbol": "ETH"
       },
-      "rpcUrls": [
-        "https://goerli.optimism.io"
-      ]
+      "rpcUrls": ["https://goerli.optimism.io"]
     },
     "fee": "optimism",
     "symbol": "ETH",
@@ -250,7 +232,7 @@
     "rpc": "https://goerli.base.org",
     "gateway": "0xe432150cce91c13a887f7D836923d5597adD8E31",
     "gasReceiver": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6",
-    "contractAddress": "0xfBf8C14e57EFce2cDafd4a9c30930310ABeb4aB6",
+    "contractAddress": "0x2a97437d90b2fCF7B7aA8eEB72488A6B8D79703A",
     "axlToken": "0x254d06f33bDc5b8ee05b2ea472107E300226659A",
     "isEtherscan": false,
     "logo": "LogosBase",
@@ -262,9 +244,7 @@
         "decimals": 18,
         "symbol": "ETH"
       },
-      "rpcUrls": [
-        "https://goerli.base.org"
-      ]
+      "rpcUrls": ["https://goerli.base.org"]
     },
     "fee": "base",
     "symbol": "ETH",
@@ -276,7 +256,7 @@
     "rpc": "https://rpc.goerli.eth.gateway.fm",
     "gateway": "0xe432150cce91c13a887f7D836923d5597adD8E31",
     "gasReceiver": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6",
-    "contractAddress": "0x810A7A8C6F005d0d043c9504d9E773CAB0dF22F8",
+    "contractAddress": "0x2266677D9d85064f8d37c4a0C9c1f158DBFd611e",
     "axlToken": "0x254d06f33bDc5b8ee05b2ea472107E300226659A",
     "isEtherscan": true,
     "logo": "LogosEthereum",
@@ -288,9 +268,7 @@
         "decimals": 18,
         "symbol": "ETH"
       },
-      "rpcUrls": [
-        "https://rpc.goerli.eth.gateway.fm"
-      ]
+      "rpcUrls": ["https://rpc.goerli.eth.gateway.fm"]
     },
     "fee": "ethereum-2",
     "symbol": "ETH",
@@ -299,7 +277,7 @@
   {
     "name": "linea",
     "chainId": 59140,
-    "rpc": "https://rpc.goerli.eth.gateway.fm",
+    "rpc": "https://rpc.goerli.linea.build",
     "gateway": "0xe432150cce91c13a887f7D836923d5597adD8E31",
     "gasReceiver": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6",
     "contractAddress": "0x810A7A8C6F005d0d043c9504d9E773CAB0dF22F8",
@@ -314,9 +292,7 @@
         "decimals": 18,
         "symbol": "ETH"
       },
-      "rpcUrls": [
-        "https://rpc.goerli.linea.build"
-      ]
+      "rpcUrls": ["https://rpc.goerli.linea.build"]
     },
     "fee": "ethereum-2",
     "symbol": "ETH",

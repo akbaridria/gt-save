@@ -1,5 +1,5 @@
 <template>
-  <div class="py-[6rem] relative z-50">
+  <div class="py-[10rem] relative z-50">
     <div class="flex gap-5 mb-[2.5rem] items-center flex-col lg:flex-row xl:flex-row">
       <div class="text-[2.5rem] md:text-[3rem] lg:text-[5rem] xl:text-[5rem]">DEPOSIT</div>
       <div>
