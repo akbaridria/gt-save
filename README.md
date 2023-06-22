@@ -18,7 +18,7 @@ GTSave utilizes Moonwell Artemis on Moonbeam as the yield source for generating 
 
 ## Supported Networks (testnet) and Contract Addresses
 
-| Network            | Contract Address                                    | (a)USDC                                        |
+| Network            | Contract Address                                    | (a)USDC                                     |
 |--------------------|-----------------------------------------------------|---------------------------------------------|
 | Moonbase Alpha     | 0x31Ed4dC6A4F467ff421bdA90D04D8258441fA9A5          | 0x3799D95Ee109129951c6b31535b2B5AA6dbF108c  |
 | Polygon Mumbai     | 0x4CAf1e27dddE4332780173a56D449eb91070529a          | 0x2c852e740B62308c46DD29B982FBb650D063Bd07  |
@@ -31,7 +31,7 @@ GTSave utilizes Moonwell Artemis on Moonbeam as the yield source for generating 
 | Optimism testnet   | 0x12aaA99572B037b893Cb37D06d42c28a87AaAC37          | 0x254d06f33bDc5b8ee05b2ea472107E300226659A  |
 | Base testnet       | 0x2a97437d90b2fCF7B7aA8eEB72488A6B8D79703A          | 0x254d06f33bDc5b8ee05b2ea472107E300226659A  |
 | Ethereumn goerli   | 0x2266677D9d85064f8d37c4a0C9c1f158DBFd611e          | 0x254d06f33bDc5b8ee05b2ea472107E300226659A  |
-| Linea testnet      | 
+| Linea testnet      | 0xfBf8C14e57EFce2cDafd4a9c30930310ABeb4aB6          | 0x254d06f33bDc5b8ee05b2ea472107E300226659A  |
 
 ### VRF Consumer, powered by API3
 

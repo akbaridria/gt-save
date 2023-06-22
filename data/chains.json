@@ -20,7 +20,9 @@
         "decimals": 18,
         "symbol": "DEV"
       },
-      "rpcUrls": ["https://rpc.api.moonbase.moonbeam.network"]
+      "rpcUrls": [
+        "https://rpc.api.moonbase.moonbeam.network"
+      ]
     },
     "fee": "moonbeam",
     "symbol": "DEV",
@@ -52,7 +54,9 @@
         "decimals": 18,
         "symbol": "MATIC"
       },
-      "rpcUrls": ["https://polygon-rpc.com/"]
+      "rpcUrls": [
+        "https://polygon-rpc.com/"
+      ]
     },
     "fee": "polygon",
     "symbol": "MATIC",
@@ -76,7 +80,9 @@
         "decimals": 18,
         "symbol": "AVAX"
       },
-      "rpcUrls": ["https://api.avax-test.network/ext/bc/C/rpc"]
+      "rpcUrls": [
+        "https://api.avax-test.network/ext/bc/C/rpc"
+      ]
     },
     "fee": "avalanche",
     "symbol": "AVAX",
@@ -100,7 +106,9 @@
         "decimals": 18,
         "symbol": "BNB"
       },
-      "rpcUrls": ["https://bsc-testnet.public.blastapi.io"]
+      "rpcUrls": [
+        "https://bsc-testnet.public.blastapi.io"
+      ]
     },
     "fee": "binance",
     "symbol": "BNB",
@@ -124,7 +132,9 @@
         "decimals": 18,
         "symbol": "FTM"
       },
-      "rpcUrls": ["https://rpc.testnet.fantom.network"]
+      "rpcUrls": [
+        "https://rpc.testnet.fantom.network"
+      ]
     },
     "fee": "fantom",
     "symbol": "FTM",
@@ -148,7 +158,9 @@
         "decimals": 18,
         "symbol": "ETH"
       },
-      "rpcUrls": ["https://testnet.aurora.dev"]
+      "rpcUrls": [
+        "https://testnet.aurora.dev"
+      ]
     },
     "fee": "aurora",
     "symbol": "aETH",
@@ -172,7 +184,9 @@
         "decimals": 18,
         "symbol": "CELO"
       },
-      "rpcUrls": ["https://alfajores-forno.celo-testnet.org"]
+      "rpcUrls": [
+        "https://alfajores-forno.celo-testnet.org"
+      ]
     },
     "fee": "celo",
     "symbol": "CELO",
@@ -196,7 +210,9 @@
         "decimals": 18,
         "symbol": "AGOR"
       },
-      "rpcUrls": ["https://goerli-rollup.arbitrum.io/rpc"]
+      "rpcUrls": [
+        "https://goerli-rollup.arbitrum.io/rpc"
+      ]
     },
     "fee": "arbitrum",
     "symbol": "ETH",
@@ -220,7 +236,9 @@
         "decimals": 18,
         "symbol": "ETH"
       },
-      "rpcUrls": ["https://goerli.optimism.io"]
+      "rpcUrls": [
+        "https://goerli.optimism.io"
+      ]
     },
     "fee": "optimism",
     "symbol": "ETH",
@@ -244,7 +262,9 @@
         "decimals": 18,
         "symbol": "ETH"
       },
-      "rpcUrls": ["https://goerli.base.org"]
+      "rpcUrls": [
+        "https://goerli.base.org"
+      ]
     },
     "fee": "base",
     "symbol": "ETH",
@@ -268,7 +288,9 @@
         "decimals": 18,
         "symbol": "ETH"
       },
-      "rpcUrls": ["https://rpc.goerli.eth.gateway.fm"]
+      "rpcUrls": [
+        "https://rpc.goerli.eth.gateway.fm"
+      ]
     },
     "fee": "ethereum-2",
     "symbol": "ETH",
@@ -280,7 +302,7 @@
     "rpc": "https://rpc.goerli.linea.build",
     "gateway": "0xe432150cce91c13a887f7D836923d5597adD8E31",
     "gasReceiver": "0xbE406F0189A0B4cf3A05C286473D23791Dd44Cc6",
-    "contractAddress": "0x810A7A8C6F005d0d043c9504d9E773CAB0dF22F8",
+    "contractAddress": "0xfBf8C14e57EFce2cDafd4a9c30930310ABeb4aB6",
     "axlToken": "0x254d06f33bDc5b8ee05b2ea472107E300226659A",
     "isEtherscan": false,
     "logo": "LogosLinea",
@@ -292,7 +314,9 @@
         "decimals": 18,
         "symbol": "ETH"
       },
-      "rpcUrls": ["https://rpc.goerli.linea.build"]
+      "rpcUrls": [
+        "https://rpc.goerli.linea.build"
+      ]
     },
     "fee": "ethereum-2",
     "symbol": "ETH",

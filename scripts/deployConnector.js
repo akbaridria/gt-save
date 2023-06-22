@@ -12,8 +12,8 @@ async function main() {
 
   console.log("deploying contract-connector...");
   console.log("--------------------------------");
-
   const Connector = await ethers.getContractFactory("GTSaveConnector");
+
   const connector = await Connector.deploy(gateway, gasReceiver);
 
   await connector.deployed();
