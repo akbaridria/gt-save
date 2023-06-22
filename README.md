@@ -17,6 +17,11 @@ GTSave leverages the following cutting-edge technologies:
 ## Yield Source
 GTSave utilizes Moonwell Artemis on Moonbeam as the yield source for generating rewards. Moonwell Artemis provides a robust and secure lending and borrowing protocol, ensuring efficient capital utilization and generating interest for GTSave users.
 
+## Project Main Flow
+
+![GTSave](https://github.com/akbaridria/gt-save/assets/26589426/7bd2dc2f-735c-4ea7-800c-e5cc62d513a1)
+
+
 ## Supported Networks (testnet) and Contract Addresses
 
 | Network            | Contract Address                                    | (a)USDC                                     |
