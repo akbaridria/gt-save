@@ -12,6 +12,7 @@ GTSave leverages the following cutting-edge technologies:
 - **Axelar GMP (Global Messaging Protocol):** A decentralized cross-chain communication protocol that enables seamless interoperability between different blockchain networks.
 - **API3 QRNG:** A secure and verifiable source of randomness used for ensuring fairness and transparency in various smart contract applications.
 - **Moonbeam Precompiles Batch:** We use Precompiles Batch on moonbeam when user want to deposit to gtsave to combine approve + deposit into a single transaction.
+- **Covalent:** We use covalent to index user historical data like deposit, withdraw and claim transaction history
 
 ## Yield Source
 GTSave utilizes Moonwell Artemis on Moonbeam as the yield source for generating rewards. Moonwell Artemis provides a robust and secure lending and borrowing protocol, ensuring efficient capital utilization and generating interest for GTSave users.
